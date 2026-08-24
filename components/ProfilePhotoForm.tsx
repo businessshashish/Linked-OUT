@@ -97,13 +97,9 @@ export default function ProfilePhotoForm() {
     }
 
     startTransition(async () => {
-      try {
-        const formData = new FormData(form);
-        setMessage("Uploading...");
-        await updateProfilePhotoAction(formData);
-      } catch (error) {
-        setMessage(error instanceof Error ? error.message : "Upload failed.");
-      }
+      const formData = new FormData(form);
+      setMessage("Uploading...");
+      await updateProfilePhotoAction(formData);
     });
   }
 
