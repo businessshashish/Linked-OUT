@@ -1,0 +1,319 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum DepartureType {
+  RESIGNED
+  LAID_OFF
+  TERMINATED
+  CONTRACT_ENDED
+  OTHER
+}
+
+enum ExitReason {
+  MANAGEMENT
+  COMPENSATION
+  WORKLOAD
+  CAREER_GROWTH
+  CULTURE
+  TEAM_POLITICS
+  RECOGNITION
+  JOB_SECURITY
+  LAYOFF_RESTRUCTURING
+  ROLE_MISMATCH
+  FLEXIBILITY_RTO
+  RELOCATION
+  BENEFITS
+  ETHICS_VALUES
+  BETTER_OPPORTUNITY
+  PERSONAL
+}
+
+enum ResponseChoice {
+  YES
+  MAYBE
+  NO
+}
+
+enum StoryStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum VerificationMethod {
+  WORK_EMAIL
+  DOCUMENT
+  OTHER
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CompanyResponseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  avatarUrl    String?
+  role         UserRole @default(USER)
+
+  publicIdentity PublicIdentity?
+  sessions       Session[]
+  verifications  EmploymentVerification[]
+  employerClaims EmployerClaim[]
+  reports         ContentReport[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PublicIdentity {
+  id     String @id @default(cuid())
+  alias  String @unique
+  userId String @unique
+
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stories ExitStory[]
+
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Company {
+  id            String @id @default(cuid())
+  name          String
+  slug          String @unique
+  industry      String
+  location      String
+  country       String
+  employeeCount String?
+  website       String?
+  logoUrl       String?
+  description   String?
+
+  stories        ExitStory[]
+  verifications  EmploymentVerification[]
+  employerClaims EmployerClaim[]
+  responses      CompanyResponse[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([industry])
+  @@index([country])
+}
+
+model ExitStory {
+  id               String @id @default(cuid())
+  companyId        String
+  publicIdentityId String?
+
+  authorAlias String
+
+  jobTitle     String
+  roleFamily   String
+  location     String
+  tenureMonths Int
+
+  departureType DepartureType
+
+  primaryReason ExitReason
+  otherReasons  ExitReason[]
+
+  managementScore   Int
+  compensationScore Int
+  workLifeScore     Int
+  careerGrowthScore Int
+  learningScore     Int
+  cultureScore      Int
+  jobSecurityScore  Int
+
+  positiveExperience String
+  reasonForLeaving   String
+  wishIKnew          String
+
+  recommendCompany ResponseChoice
+  workHereAgain     ResponseChoice
+
+  autoFlags      String[]
+  isDemo         Boolean      @default(false)
+  imageUrl       String?
+  status         StoryStatus @default(PENDING)
+  moderationNote String?
+
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  publicIdentity PublicIdentity? @relation(fields: [publicIdentityId], references: [id], onDelete: SetNull)
+
+  reports   ContentReport[]
+  responses CompanyResponse[]
+
+  @@unique([publicIdentityId, companyId])
+  @@index([companyId, status])
+  @@index([createdAt])
+}
+
+model EmploymentVerification {
+  id        String             @id @default(cuid())
+  userId    String
+  companyId String
+  method    VerificationMethod
+
+  workEmail    String?
+  evidenceNote String?
+
+  status         VerificationStatus @default(PENDING)
+  moderatorNote  String?
+  reviewedById   String?
+  decidedAt      DateTime?
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, companyId])
+  @@index([status])
+}
+
+model EmployerClaim {
+  id        String @id @default(cuid())
+  userId    String
+  companyId String
+
+  workEmail String
+
+  status       ClaimStatus @default(PENDING)
+  reviewerNote String?
+  reviewedById String?
+  decidedAt    DateTime?
+
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company   Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  responses CompanyResponse[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, companyId])
+  @@index([status])
+}
+
+model CompanyResponse {
+  id        String @id @default(cuid())
+  companyId String
+  claimId   String?
+  storyId   String?
+
+  body        String
+  authorLabel String
+  autoFlags   String[]
+  isDemo      Boolean  @default(false)
+
+  status CompanyResponseStatus @default(PENDING)
+
+  moderationNote String?
+  moderatedById  String?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  claim EmployerClaim? @relation(fields: [claimId], references: [id], onDelete: SetNull)
+
+  story ExitStory? @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([storyId])
+}
+
+model ContentReport {
+  id         String @id @default(cuid())
+  reporterId String?
+  storyId    String
+
+  reason  String
+  details String?
+
+  status ReportStatus @default(OPEN)
+
+  resolutionNote String?
+
+  reporter User? @relation(fields: [reporterId], references: [id], onDelete: SetNull)
+
+  story ExitStory @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([storyId])
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+
+  actorUserId String?
+
+  action     String
+  entityType String
+  entityId   String?
+
+  metadata Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([actorUserId])
+}

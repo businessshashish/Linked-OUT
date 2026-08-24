@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: linkedout-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: linkedout
+      POSTGRES_PASSWORD: linkedout
+      POSTGRES_DB: linkedout
+    ports:
+      - "5432:5432"
+    volumes:
+      - linkedout_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  linkedout_postgres_data:
