@@ -2,7 +2,7 @@
 
 import { ChangeEvent, DragEvent, useState } from "react";
 
-const MAX_BYTES = 900 * 1024;
+const MAX_BYTES = 600 * 1024;
 const MAX_DIMENSION = 1800;
 
 export default function StoryImageInput() {
@@ -34,7 +34,7 @@ export default function StoryImageInput() {
         quality -= 0.09;
       }
 
-      if (!result || result.size > MAX_BYTES) throw new Error("This image could not be reduced below 900 KB.");
+      if (!result || result.size > MAX_BYTES) throw new Error("This image could not be reduced below 600 KB.");
       return new File([result], "experience.jpg", { type: "image/jpeg" });
     } finally {
       URL.revokeObjectURL(source);

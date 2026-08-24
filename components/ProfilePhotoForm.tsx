@@ -4,7 +4,7 @@ import { ChangeEvent, DragEvent, FormEvent, useState, useTransition } from "reac
 
 import { updateProfilePhotoAction } from "@/app/actions";
 
-const MAX_UPLOAD_BYTES = 900 * 1024;
+const MAX_UPLOAD_BYTES = 600 * 1024;
 const MAX_DIMENSION = 1600;
 
 async function compressImage(file: File) {
@@ -41,7 +41,7 @@ async function compressImage(file: File) {
     }
 
     if (!blob || blob.size > MAX_UPLOAD_BYTES) {
-      throw new Error("This image could not be reduced below 900 KB.");
+      throw new Error("This image could not be reduced below 600 KB.");
     }
 
     return new File([blob], "profile.jpg", { type: "image/jpeg" });

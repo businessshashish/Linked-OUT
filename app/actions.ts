@@ -64,20 +64,25 @@ export async function updateProfilePhotoAction(formData: FormData) {
     errorRedirect("/account", "Use a JPG, PNG, GIF, or WebP image.");
   }
 
-  const directory = path.join(process.cwd(), "public", "uploads", "profile");
   const filename = `${user.id}.${extension}`;
-  const filePath = path.join(directory, filename);
+  const imageBuffer = Buffer.from(await file.arrayBuffer());
+  const avatarUrl = process.env.VERCEL
+    ? `data:${file.type};base64,${imageBuffer.toString("base64")}`
+    : `/uploads/profile/${filename}`;
 
-  await mkdir(directory, { recursive: true });
-  await writeFile(filePath, Buffer.from(await file.arrayBuffer()));
+  if (!process.env.VERCEL) {
+    const directory = path.join(process.cwd(), "public", "uploads", "profile");
+    await mkdir(directory, { recursive: true });
+    await writeFile(path.join(directory, filename), imageBuffer);
 
-  if (user.avatarUrl && user.avatarUrl !== `/uploads/profile/${filename}`) {
-    await unlink(path.join(process.cwd(), "public", user.avatarUrl.replace(/^\//, ""))).catch(() => undefined);
+    if (user.avatarUrl?.startsWith("/uploads/")) {
+      await unlink(path.join(process.cwd(), "public", user.avatarUrl.replace(/^\//, ""))).catch(() => undefined);
+    }
   }
 
   await prisma.user.update({
     where: { id: user.id },
-    data: { avatarUrl: `/uploads/profile/${filename}` }
+    data: { avatarUrl }
   });
 
   revalidatePath("/", "layout");
@@ -357,11 +362,17 @@ export async function createStoryAction(
       errorRedirect("/submit", "Experience images must be images smaller than 5 MB.");
     }
 
-    const imageDirectory = path.join(process.cwd(), "public", "uploads", "experience");
     const imageName = `${randomBytes(16).toString("hex")}.jpg`;
-    await mkdir(imageDirectory, { recursive: true });
-    await writeFile(path.join(imageDirectory, imageName), Buffer.from(await imageFile.arrayBuffer()));
-    imageUrl = `/uploads/experience/${imageName}`;
+    const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
+
+    if (process.env.VERCEL) {
+      imageUrl = `data:${imageFile.type};base64,${imageBuffer.toString("base64")}`;
+    } else {
+      const imageDirectory = path.join(process.cwd(), "public", "uploads", "experience");
+      await mkdir(imageDirectory, { recursive: true });
+      await writeFile(path.join(imageDirectory, imageName), imageBuffer);
+      imageUrl = `/uploads/experience/${imageName}`;
+    }
   }
 
   const story = await prisma.exitStory.create({
