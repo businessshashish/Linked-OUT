@@ -11,6 +11,8 @@ import CompanyPicker from "@/components/CompanyPicker";
 import OtherReasonsPicker from "@/components/OtherReasonsPicker";
 import RatingSlider from "@/components/RatingSlider";
 import StoryImageInput from "@/components/StoryImageInput";
+import VoiceExitInterview from "@/components/VoiceExitInterview";
+import FormAutofillBridge from "@/components/FormAutofillBridge";
 
 const ratings = [
   ["managementScore", "Management"],
@@ -67,10 +69,14 @@ export default async function SubmitPage({
         </div>
       )}
 
+      <VoiceExitInterview companies={companies} />
+
       <form
         action={createStoryAction}
         className="formStack"
+        data-share-form="true"
       >
+        <FormAutofillBridge />
         <fieldset>
           <legend>Employment</legend>
 

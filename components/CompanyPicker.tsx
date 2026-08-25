@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type CompanyOption = {
   id: string;
@@ -23,6 +23,17 @@ export default function CompanyPicker({
   const [selected, setSelected] = useState(selectedId);
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    function handleAutofill(event: Event) {
+      const detail = (event as CustomEvent<{ name: string; value: string }>).detail;
+      if (detail.name !== name) return;
+      const company = companies.find((item) => item.id === detail.value);
+      if (company) chooseCompany(company);
+    }
+    document.addEventListener("linkedout:autofill", handleAutofill);
+    return () => document.removeEventListener("linkedout:autofill", handleAutofill);
+  });
+
   const matches = query.trim()
     ? companies.filter((company) => company.name.toLowerCase().includes(query.trim().toLowerCase())).slice(0, 12)
     : companies.slice(0, 12);
@@ -34,7 +45,7 @@ export default function CompanyPicker({
   }
 
   return (
-    <div className="companyPicker">
+    <div className="companyPicker" data-autofill-field={name}>
       <input
         value={query}
         onChange={(event) => {

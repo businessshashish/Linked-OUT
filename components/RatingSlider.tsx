@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function RatingSlider({
   name,
@@ -10,6 +10,15 @@ export default function RatingSlider({
   label: string;
 }) {
   const [value, setValue] = useState(3);
+
+  useEffect(() => {
+    function handleAutofill(event: Event) {
+      const detail = (event as CustomEvent<{ name: string; value: number }>).detail;
+      if (detail.name === name && detail.value >= 1 && detail.value <= 5) setValue(detail.value);
+    }
+    document.addEventListener("linkedout:autofill", handleAutofill);
+    return () => document.removeEventListener("linkedout:autofill", handleAutofill);
+  }, [name]);
 
   return (
     <label className="ratingSlider">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   REASON_LABELS,
@@ -9,6 +9,15 @@ import {
 
 export default function OtherReasonsPicker() {
   const [selected, setSelected] = useState<string[]>([]);
+
+  useEffect(() => {
+    function handleAutofill(event: Event) {
+      const reasons = (event as CustomEvent<string[]>).detail;
+      setSelected(reasons.slice(0, 2));
+    }
+    document.addEventListener("linkedout:autofill-reasons", handleAutofill);
+    return () => document.removeEventListener("linkedout:autofill-reasons", handleAutofill);
+  }, []);
 
   function toggle(reason: string) {
     setSelected((current) =>

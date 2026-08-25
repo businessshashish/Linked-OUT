@@ -26,11 +26,11 @@ export default async function Nav() {
 
         <nav className="navLinks">
           <Link href="/explore">
-            <span className="navIcon">[ ]</span>
+            <span className="navIcon uiIcon uiIcon-explore" aria-hidden="true" />
             <span>Explore</span>
           </Link>
           <Link href="/submit">
-            <span className="navIcon">+</span>
+            <span className="navIcon uiIcon uiIcon-share" aria-hidden="true" />
             <span>Share</span>
           </Link>
 

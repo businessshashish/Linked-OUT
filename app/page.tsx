@@ -5,6 +5,7 @@ import { companyAnalytics } from "@/lib/analytics";
 import { isDemoDataEnabled } from "@/lib/demo-data";
 import { getCurrentUser } from "@/lib/session";
 import StoryCard from "@/components/StoryCard";
+import FeedLeftRail from "@/components/FeedLeftRail";
 
 export default async function Home({
   searchParams
@@ -28,7 +29,8 @@ export default async function Home({
       company: {
         select: {
           name: true,
-          slug: true
+          slug: true,
+          logoUrl: true
         }
       },
       responses: {
@@ -42,6 +44,14 @@ export default async function Home({
     ],
     take: 10
   });
+
+  const identityId = user?.publicIdentity?.id;
+  const [publishedStories, pendingStories] = identityId
+    ? await Promise.all([
+        prisma.exitStory.count({ where: { publicIdentityId: identityId, status: "APPROVED" } }),
+        prisma.exitStory.count({ where: { publicIdentityId: identityId, status: "PENDING" } })
+      ])
+    : [0, 0];
 
   const companies = query
     ? await prisma.company.findMany({
@@ -263,11 +273,25 @@ export default async function Home({
         </div>
 
         <div className="feedColumns">
+          <FeedLeftRail
+            user={user}
+            publishedStories={publishedStories}
+            pendingStories={pendingStories}
+          />
+
           <div className="feedList">
             {feedStories.map((story) => (
               <div className="feedPost" key={story.id}>
                 <Link className="feedCompany" href={`/company/${story.company.slug}`}>
-                  <span className="feedCompanyAvatar">{story.company.name[0]}</span>
+                  {story.company.logoUrl ? (
+                    <img
+                      className="feedCompanyAvatar feedCompanyLogo"
+                      src={story.company.logoUrl}
+                      alt={`${story.company.name} logo`}
+                    />
+                  ) : (
+                    <span className="feedCompanyAvatar">{story.company.name[0]}</span>
+                  )}
                   <span>
                     <strong>{story.company.name}</strong>
                     <small>Employee experience</small>
