@@ -360,20 +360,20 @@ export type ExitStoryGroupByOutputType = {
   companyId: string
   publicIdentityId: string | null
   authorAlias: string
-  jobTitle: string
+  jobTitle: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location: string | null
+  tenureMonths: number | null
+  departureType: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons: $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore: number | null
+  compensationScore: number | null
+  workLifeScore: number | null
+  careerGrowthScore: number | null
+  learningScore: number | null
+  cultureScore: number | null
+  jobSecurityScore: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -417,20 +417,20 @@ export type ExitStoryWhereInput = {
   companyId?: Prisma.StringFilter<"ExitStory"> | string
   publicIdentityId?: Prisma.StringNullableFilter<"ExitStory"> | string | null
   authorAlias?: Prisma.StringFilter<"ExitStory"> | string
-  jobTitle?: Prisma.StringFilter<"ExitStory"> | string
+  jobTitle?: Prisma.StringNullableFilter<"ExitStory"> | string | null
   roleFamily?: Prisma.StringFilter<"ExitStory"> | string
-  location?: Prisma.StringFilter<"ExitStory"> | string
-  tenureMonths?: Prisma.IntFilter<"ExitStory"> | number
-  departureType?: Prisma.EnumDepartureTypeFilter<"ExitStory"> | $Enums.DepartureType
+  location?: Prisma.StringNullableFilter<"ExitStory"> | string | null
+  tenureMonths?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  departureType?: Prisma.EnumDepartureTypeNullableFilter<"ExitStory"> | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFilter<"ExitStory"> | $Enums.ExitReason
   otherReasons?: Prisma.EnumExitReasonNullableListFilter<"ExitStory">
-  managementScore?: Prisma.IntFilter<"ExitStory"> | number
-  compensationScore?: Prisma.IntFilter<"ExitStory"> | number
-  workLifeScore?: Prisma.IntFilter<"ExitStory"> | number
-  careerGrowthScore?: Prisma.IntFilter<"ExitStory"> | number
-  learningScore?: Prisma.IntFilter<"ExitStory"> | number
-  cultureScore?: Prisma.IntFilter<"ExitStory"> | number
-  jobSecurityScore?: Prisma.IntFilter<"ExitStory"> | number
+  managementScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  compensationScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  workLifeScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  careerGrowthScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  learningScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  cultureScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  jobSecurityScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
   positiveExperience?: Prisma.StringFilter<"ExitStory"> | string
   reasonForLeaving?: Prisma.StringFilter<"ExitStory"> | string
   wishIKnew?: Prisma.StringFilter<"ExitStory"> | string
@@ -455,20 +455,20 @@ export type ExitStoryOrderByWithRelationInput = {
   companyId?: Prisma.SortOrder
   publicIdentityId?: Prisma.SortOrderInput | Prisma.SortOrder
   authorAlias?: Prisma.SortOrder
-  jobTitle?: Prisma.SortOrder
+  jobTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   roleFamily?: Prisma.SortOrder
-  location?: Prisma.SortOrder
-  tenureMonths?: Prisma.SortOrder
-  departureType?: Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  tenureMonths?: Prisma.SortOrderInput | Prisma.SortOrder
+  departureType?: Prisma.SortOrderInput | Prisma.SortOrder
   primaryReason?: Prisma.SortOrder
   otherReasons?: Prisma.SortOrder
-  managementScore?: Prisma.SortOrder
-  compensationScore?: Prisma.SortOrder
-  workLifeScore?: Prisma.SortOrder
-  careerGrowthScore?: Prisma.SortOrder
-  learningScore?: Prisma.SortOrder
-  cultureScore?: Prisma.SortOrder
-  jobSecurityScore?: Prisma.SortOrder
+  managementScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  compensationScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  workLifeScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  careerGrowthScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  learningScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  cultureScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  jobSecurityScore?: Prisma.SortOrderInput | Prisma.SortOrder
   positiveExperience?: Prisma.SortOrder
   reasonForLeaving?: Prisma.SortOrder
   wishIKnew?: Prisma.SortOrder
@@ -497,20 +497,20 @@ export type ExitStoryWhereUniqueInput = Prisma.AtLeast<{
   companyId?: Prisma.StringFilter<"ExitStory"> | string
   publicIdentityId?: Prisma.StringNullableFilter<"ExitStory"> | string | null
   authorAlias?: Prisma.StringFilter<"ExitStory"> | string
-  jobTitle?: Prisma.StringFilter<"ExitStory"> | string
+  jobTitle?: Prisma.StringNullableFilter<"ExitStory"> | string | null
   roleFamily?: Prisma.StringFilter<"ExitStory"> | string
-  location?: Prisma.StringFilter<"ExitStory"> | string
-  tenureMonths?: Prisma.IntFilter<"ExitStory"> | number
-  departureType?: Prisma.EnumDepartureTypeFilter<"ExitStory"> | $Enums.DepartureType
+  location?: Prisma.StringNullableFilter<"ExitStory"> | string | null
+  tenureMonths?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  departureType?: Prisma.EnumDepartureTypeNullableFilter<"ExitStory"> | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFilter<"ExitStory"> | $Enums.ExitReason
   otherReasons?: Prisma.EnumExitReasonNullableListFilter<"ExitStory">
-  managementScore?: Prisma.IntFilter<"ExitStory"> | number
-  compensationScore?: Prisma.IntFilter<"ExitStory"> | number
-  workLifeScore?: Prisma.IntFilter<"ExitStory"> | number
-  careerGrowthScore?: Prisma.IntFilter<"ExitStory"> | number
-  learningScore?: Prisma.IntFilter<"ExitStory"> | number
-  cultureScore?: Prisma.IntFilter<"ExitStory"> | number
-  jobSecurityScore?: Prisma.IntFilter<"ExitStory"> | number
+  managementScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  compensationScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  workLifeScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  careerGrowthScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  learningScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  cultureScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  jobSecurityScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
   positiveExperience?: Prisma.StringFilter<"ExitStory"> | string
   reasonForLeaving?: Prisma.StringFilter<"ExitStory"> | string
   wishIKnew?: Prisma.StringFilter<"ExitStory"> | string
@@ -535,20 +535,20 @@ export type ExitStoryOrderByWithAggregationInput = {
   companyId?: Prisma.SortOrder
   publicIdentityId?: Prisma.SortOrderInput | Prisma.SortOrder
   authorAlias?: Prisma.SortOrder
-  jobTitle?: Prisma.SortOrder
+  jobTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   roleFamily?: Prisma.SortOrder
-  location?: Prisma.SortOrder
-  tenureMonths?: Prisma.SortOrder
-  departureType?: Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  tenureMonths?: Prisma.SortOrderInput | Prisma.SortOrder
+  departureType?: Prisma.SortOrderInput | Prisma.SortOrder
   primaryReason?: Prisma.SortOrder
   otherReasons?: Prisma.SortOrder
-  managementScore?: Prisma.SortOrder
-  compensationScore?: Prisma.SortOrder
-  workLifeScore?: Prisma.SortOrder
-  careerGrowthScore?: Prisma.SortOrder
-  learningScore?: Prisma.SortOrder
-  cultureScore?: Prisma.SortOrder
-  jobSecurityScore?: Prisma.SortOrder
+  managementScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  compensationScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  workLifeScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  careerGrowthScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  learningScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  cultureScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  jobSecurityScore?: Prisma.SortOrderInput | Prisma.SortOrder
   positiveExperience?: Prisma.SortOrder
   reasonForLeaving?: Prisma.SortOrder
   wishIKnew?: Prisma.SortOrder
@@ -577,20 +577,20 @@ export type ExitStoryScalarWhereWithAggregatesInput = {
   companyId?: Prisma.StringWithAggregatesFilter<"ExitStory"> | string
   publicIdentityId?: Prisma.StringNullableWithAggregatesFilter<"ExitStory"> | string | null
   authorAlias?: Prisma.StringWithAggregatesFilter<"ExitStory"> | string
-  jobTitle?: Prisma.StringWithAggregatesFilter<"ExitStory"> | string
+  jobTitle?: Prisma.StringNullableWithAggregatesFilter<"ExitStory"> | string | null
   roleFamily?: Prisma.StringWithAggregatesFilter<"ExitStory"> | string
-  location?: Prisma.StringWithAggregatesFilter<"ExitStory"> | string
-  tenureMonths?: Prisma.IntWithAggregatesFilter<"ExitStory"> | number
-  departureType?: Prisma.EnumDepartureTypeWithAggregatesFilter<"ExitStory"> | $Enums.DepartureType
+  location?: Prisma.StringNullableWithAggregatesFilter<"ExitStory"> | string | null
+  tenureMonths?: Prisma.IntNullableWithAggregatesFilter<"ExitStory"> | number | null
+  departureType?: Prisma.EnumDepartureTypeNullableWithAggregatesFilter<"ExitStory"> | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonWithAggregatesFilter<"ExitStory"> | $Enums.ExitReason
   otherReasons?: Prisma.EnumExitReasonNullableListFilter<"ExitStory">
-  managementScore?: Prisma.IntWithAggregatesFilter<"ExitStory"> | number
-  compensationScore?: Prisma.IntWithAggregatesFilter<"ExitStory"> | number
-  workLifeScore?: Prisma.IntWithAggregatesFilter<"ExitStory"> | number
-  careerGrowthScore?: Prisma.IntWithAggregatesFilter<"ExitStory"> | number
-  learningScore?: Prisma.IntWithAggregatesFilter<"ExitStory"> | number
-  cultureScore?: Prisma.IntWithAggregatesFilter<"ExitStory"> | number
-  jobSecurityScore?: Prisma.IntWithAggregatesFilter<"ExitStory"> | number
+  managementScore?: Prisma.IntNullableWithAggregatesFilter<"ExitStory"> | number | null
+  compensationScore?: Prisma.IntNullableWithAggregatesFilter<"ExitStory"> | number | null
+  workLifeScore?: Prisma.IntNullableWithAggregatesFilter<"ExitStory"> | number | null
+  careerGrowthScore?: Prisma.IntNullableWithAggregatesFilter<"ExitStory"> | number | null
+  learningScore?: Prisma.IntNullableWithAggregatesFilter<"ExitStory"> | number | null
+  cultureScore?: Prisma.IntNullableWithAggregatesFilter<"ExitStory"> | number | null
+  jobSecurityScore?: Prisma.IntNullableWithAggregatesFilter<"ExitStory"> | number | null
   positiveExperience?: Prisma.StringWithAggregatesFilter<"ExitStory"> | string
   reasonForLeaving?: Prisma.StringWithAggregatesFilter<"ExitStory"> | string
   wishIKnew?: Prisma.StringWithAggregatesFilter<"ExitStory"> | string
@@ -609,20 +609,20 @@ export type ExitStoryScalarWhereWithAggregatesInput = {
 export type ExitStoryCreateInput = {
   id?: string
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -647,20 +647,20 @@ export type ExitStoryUncheckedCreateInput = {
   companyId: string
   publicIdentityId?: string | null
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -681,20 +681,20 @@ export type ExitStoryUncheckedCreateInput = {
 export type ExitStoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -719,20 +719,20 @@ export type ExitStoryUncheckedUpdateInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   publicIdentityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -755,20 +755,20 @@ export type ExitStoryCreateManyInput = {
   companyId: string
   publicIdentityId?: string | null
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -787,20 +787,20 @@ export type ExitStoryCreateManyInput = {
 export type ExitStoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -821,20 +821,20 @@ export type ExitStoryUncheckedUpdateManyInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   publicIdentityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1103,16 +1103,16 @@ export type ExitStoryCreateautoFlagsInput = {
   set: string[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
 }
 
-export type EnumDepartureTypeFieldUpdateOperationsInput = {
-  set?: $Enums.DepartureType
+export type NullableEnumDepartureTypeFieldUpdateOperationsInput = {
+  set?: $Enums.DepartureType | null
 }
 
 export type EnumExitReasonFieldUpdateOperationsInput = {
@@ -1178,20 +1178,20 @@ export type ExitStoryUpdateOneRequiredWithoutReportsNestedInput = {
 export type ExitStoryCreateWithoutPublicIdentityInput = {
   id?: string
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1214,20 +1214,20 @@ export type ExitStoryUncheckedCreateWithoutPublicIdentityInput = {
   id?: string
   companyId: string
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1279,20 +1279,20 @@ export type ExitStoryScalarWhereInput = {
   companyId?: Prisma.StringFilter<"ExitStory"> | string
   publicIdentityId?: Prisma.StringNullableFilter<"ExitStory"> | string | null
   authorAlias?: Prisma.StringFilter<"ExitStory"> | string
-  jobTitle?: Prisma.StringFilter<"ExitStory"> | string
+  jobTitle?: Prisma.StringNullableFilter<"ExitStory"> | string | null
   roleFamily?: Prisma.StringFilter<"ExitStory"> | string
-  location?: Prisma.StringFilter<"ExitStory"> | string
-  tenureMonths?: Prisma.IntFilter<"ExitStory"> | number
-  departureType?: Prisma.EnumDepartureTypeFilter<"ExitStory"> | $Enums.DepartureType
+  location?: Prisma.StringNullableFilter<"ExitStory"> | string | null
+  tenureMonths?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  departureType?: Prisma.EnumDepartureTypeNullableFilter<"ExitStory"> | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFilter<"ExitStory"> | $Enums.ExitReason
   otherReasons?: Prisma.EnumExitReasonNullableListFilter<"ExitStory">
-  managementScore?: Prisma.IntFilter<"ExitStory"> | number
-  compensationScore?: Prisma.IntFilter<"ExitStory"> | number
-  workLifeScore?: Prisma.IntFilter<"ExitStory"> | number
-  careerGrowthScore?: Prisma.IntFilter<"ExitStory"> | number
-  learningScore?: Prisma.IntFilter<"ExitStory"> | number
-  cultureScore?: Prisma.IntFilter<"ExitStory"> | number
-  jobSecurityScore?: Prisma.IntFilter<"ExitStory"> | number
+  managementScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  compensationScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  workLifeScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  careerGrowthScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  learningScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  cultureScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
+  jobSecurityScore?: Prisma.IntNullableFilter<"ExitStory"> | number | null
   positiveExperience?: Prisma.StringFilter<"ExitStory"> | string
   reasonForLeaving?: Prisma.StringFilter<"ExitStory"> | string
   wishIKnew?: Prisma.StringFilter<"ExitStory"> | string
@@ -1311,20 +1311,20 @@ export type ExitStoryScalarWhereInput = {
 export type ExitStoryCreateWithoutCompanyInput = {
   id?: string
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1347,20 +1347,20 @@ export type ExitStoryUncheckedCreateWithoutCompanyInput = {
   id?: string
   publicIdentityId?: string | null
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1407,20 +1407,20 @@ export type ExitStoryUpdateManyWithWhereWithoutCompanyInput = {
 export type ExitStoryCreateWithoutResponsesInput = {
   id?: string
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1444,20 +1444,20 @@ export type ExitStoryUncheckedCreateWithoutResponsesInput = {
   companyId: string
   publicIdentityId?: string | null
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1493,20 +1493,20 @@ export type ExitStoryUpdateToOneWithWhereWithoutResponsesInput = {
 export type ExitStoryUpdateWithoutResponsesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1530,20 +1530,20 @@ export type ExitStoryUncheckedUpdateWithoutResponsesInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   publicIdentityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1563,20 +1563,20 @@ export type ExitStoryUncheckedUpdateWithoutResponsesInput = {
 export type ExitStoryCreateWithoutReportsInput = {
   id?: string
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1600,20 +1600,20 @@ export type ExitStoryUncheckedCreateWithoutReportsInput = {
   companyId: string
   publicIdentityId?: string | null
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1649,20 +1649,20 @@ export type ExitStoryUpdateToOneWithWhereWithoutReportsInput = {
 export type ExitStoryUpdateWithoutReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1686,20 +1686,20 @@ export type ExitStoryUncheckedUpdateWithoutReportsInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   publicIdentityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1720,20 +1720,20 @@ export type ExitStoryCreateManyPublicIdentityInput = {
   id?: string
   companyId: string
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1752,20 +1752,20 @@ export type ExitStoryCreateManyPublicIdentityInput = {
 export type ExitStoryUpdateWithoutPublicIdentityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1788,20 +1788,20 @@ export type ExitStoryUncheckedUpdateWithoutPublicIdentityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1823,20 +1823,20 @@ export type ExitStoryUncheckedUpdateManyWithoutPublicIdentityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1856,20 +1856,20 @@ export type ExitStoryCreateManyCompanyInput = {
   id?: string
   publicIdentityId?: string | null
   authorAlias: string
-  jobTitle: string
+  jobTitle?: string | null
   roleFamily: string
-  location: string
-  tenureMonths: number
-  departureType: $Enums.DepartureType
+  location?: string | null
+  tenureMonths?: number | null
+  departureType?: $Enums.DepartureType | null
   primaryReason: $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryCreateotherReasonsInput | $Enums.ExitReason[]
-  managementScore: number
-  compensationScore: number
-  workLifeScore: number
-  careerGrowthScore: number
-  learningScore: number
-  cultureScore: number
-  jobSecurityScore: number
+  managementScore?: number | null
+  compensationScore?: number | null
+  workLifeScore?: number | null
+  careerGrowthScore?: number | null
+  learningScore?: number | null
+  cultureScore?: number | null
+  jobSecurityScore?: number | null
   positiveExperience: string
   reasonForLeaving: string
   wishIKnew: string
@@ -1888,20 +1888,20 @@ export type ExitStoryCreateManyCompanyInput = {
 export type ExitStoryUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1924,20 +1924,20 @@ export type ExitStoryUncheckedUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   publicIdentityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1959,20 +1959,20 @@ export type ExitStoryUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   publicIdentityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorAlias?: Prisma.StringFieldUpdateOperationsInput | string
-  jobTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleFamily?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  tenureMonths?: Prisma.IntFieldUpdateOperationsInput | number
-  departureType?: Prisma.EnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departureType?: Prisma.NullableEnumDepartureTypeFieldUpdateOperationsInput | $Enums.DepartureType | null
   primaryReason?: Prisma.EnumExitReasonFieldUpdateOperationsInput | $Enums.ExitReason
   otherReasons?: Prisma.ExitStoryUpdateotherReasonsInput | $Enums.ExitReason[]
-  managementScore?: Prisma.IntFieldUpdateOperationsInput | number
-  compensationScore?: Prisma.IntFieldUpdateOperationsInput | number
-  workLifeScore?: Prisma.IntFieldUpdateOperationsInput | number
-  careerGrowthScore?: Prisma.IntFieldUpdateOperationsInput | number
-  learningScore?: Prisma.IntFieldUpdateOperationsInput | number
-  cultureScore?: Prisma.IntFieldUpdateOperationsInput | number
-  jobSecurityScore?: Prisma.IntFieldUpdateOperationsInput | number
+  managementScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compensationScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workLifeScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  careerGrowthScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  learningScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cultureScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jobSecurityScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   positiveExperience?: Prisma.StringFieldUpdateOperationsInput | string
   reasonForLeaving?: Prisma.StringFieldUpdateOperationsInput | string
   wishIKnew?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2203,20 +2203,20 @@ export type $ExitStoryPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     companyId: string
     publicIdentityId: string | null
     authorAlias: string
-    jobTitle: string
+    jobTitle: string | null
     roleFamily: string
-    location: string
-    tenureMonths: number
-    departureType: $Enums.DepartureType
+    location: string | null
+    tenureMonths: number | null
+    departureType: $Enums.DepartureType | null
     primaryReason: $Enums.ExitReason
     otherReasons: $Enums.ExitReason[]
-    managementScore: number
-    compensationScore: number
-    workLifeScore: number
-    careerGrowthScore: number
-    learningScore: number
-    cultureScore: number
-    jobSecurityScore: number
+    managementScore: number | null
+    compensationScore: number | null
+    workLifeScore: number | null
+    careerGrowthScore: number | null
+    learningScore: number | null
+    cultureScore: number | null
+    jobSecurityScore: number | null
     positiveExperience: string
     reasonForLeaving: string
     wishIKnew: string

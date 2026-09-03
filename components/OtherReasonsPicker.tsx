@@ -7,8 +7,8 @@ import {
   EXIT_REASON_VALUES
 } from "@/lib/constants";
 
-export default function OtherReasonsPicker() {
-  const [selected, setSelected] = useState<string[]>([]);
+export default function OtherReasonsPicker({ initialReasons = [] }: { initialReasons?: string[] }) {
+  const [selected, setSelected] = useState<string[]>(initialReasons.slice(0, 2));
 
   useEffect(() => {
     function handleAutofill(event: Event) {
@@ -31,7 +31,7 @@ export default function OtherReasonsPicker() {
 
   return (
     <div>
-      <strong>Other reasons — maximum two ({selected.length}/2)</strong>
+      <strong>Other reasons — maximum two (three tags total) ({selected.length}/2)</strong>
       <div className="checkboxGrid">
         {EXIT_REASON_VALUES.map((reason) => {
           const checked = selected.includes(reason);

@@ -1,0 +1,5 @@
+import TrustPage from "@/components/TrustPage";
+
+export default function HowAnonymityWorksPage() {
+  return <TrustPage eyebrow="HOW ANONYMITY WORKS" title="Your experience is public. Your identity is not." intro="LinkedOut separates the account you use to manage a contribution from the anonymous experience people can read." sections={[{ title: "What readers can see", body: ["Readers see the company, broad role, optional country, selected exit reasons, and the testimony you choose to submit. Exact title, tenure, departure date, account identifiers, and email are not public."] }, { title: "What companies can see", body: ["Companies can read approved experiences and submit a verified response. They cannot see the contributor’s name, email, account, verification evidence, or identity-to-story link through LinkedOut."] }, { title: "How we protect the record", body: ["Before publication, experiences enter moderation for privacy, doxxing, harassment, confidential information, and spam concerns. You can edit or delete your contribution from your account."] }]} />;
+}

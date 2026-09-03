@@ -60,6 +60,7 @@ export const ModelName = {
   EmployerClaim: 'EmployerClaim',
   CompanyResponse: 'CompanyResponse',
   ContentReport: 'ContentReport',
+  CompanyRequest: 'CompanyRequest',
   AuditLog: 'AuditLog'
 } as const
 
@@ -234,6 +235,18 @@ export const ContentReportScalarFieldEnum = {
 } as const
 
 export type ContentReportScalarFieldEnum = (typeof ContentReportScalarFieldEnum)[keyof typeof ContentReportScalarFieldEnum]
+
+
+export const CompanyRequestScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  website: 'website',
+  requesterId: 'requesterId',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type CompanyRequestScalarFieldEnum = (typeof CompanyRequestScalarFieldEnum)[keyof typeof CompanyRequestScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {

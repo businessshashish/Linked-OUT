@@ -1,38 +1,31 @@
 import prisma from "@/lib/prisma";
-import { requireUser } from "@/lib/session";
+import { getCurrentUser } from "@/lib/session";
 
 import {
   EXIT_REASON_VALUES,
   REASON_LABELS
 } from "@/lib/constants";
 
-import { createStoryAction } from "@/app/actions";
+import { createStoryAction, updateStoryAction } from "@/app/actions";
 import CompanyPicker from "@/components/CompanyPicker";
 import OtherReasonsPicker from "@/components/OtherReasonsPicker";
-import RatingSlider from "@/components/RatingSlider";
-import StoryImageInput from "@/components/StoryImageInput";
 import VoiceExitInterview from "@/components/VoiceExitInterview";
 import FormAutofillBridge from "@/components/FormAutofillBridge";
-
-const ratings = [
-  ["managementScore", "Management"],
-  ["compensationScore", "Compensation"],
-  ["workLifeScore", "Work-life balance"],
-  ["careerGrowthScore", "Career growth"],
-  ["learningScore", "Learning"],
-  ["cultureScore", "Culture"],
-  ["jobSecurityScore", "Job security"]
-] as const;
+import ShareDraftGuard from "@/components/ShareDraftGuard";
+import FunnelTracker from "@/components/FunnelTracker";
+import PrivacyCheck from "@/components/PrivacyCheck";
+import { resolveCompany } from "@/lib/company-search";
 
 export default async function SubmitPage({
   searchParams
 }: {
   searchParams: Promise<{
     company?: string;
+    edit?: string;
     error?: string;
   }>;
 }) {
-  await requireUser();
+  const user = await getCurrentUser();
 
   const query = await searchParams;
 
@@ -42,26 +35,28 @@ export default async function SubmitPage({
     }
   });
 
-  const selected =
-    companies.find(
-      (company) =>
-        company.slug === query.company
-    )?.id || "";
+  const editStory = user?.publicIdentity && query.edit
+    ? await prisma.exitStory.findFirst({
+        where: { id: query.edit, publicIdentityId: user.publicIdentity.id }
+      })
+    : null;
+  const selected = editStory?.companyId || resolveCompany(query.company, companies)?.id || "";
+  const action = editStory ? updateStoryAction : createStoryAction;
 
   return (
     <div className="narrowContainer">
+      <FunnelTracker event="share_started" source={query.company} />
       <div className="eyebrow">
-        EXIT STORY
+        {editStory ? "EDIT EXPERIENCE" : "EXIT STORY"}
       </div>
 
       <h1>Why did you leave?</h1>
 
       <p className="lead">
-        Share your firsthand workplace
-        experience. Talk about systems and
-        experiences rather than naming private
-        individuals.
+        Share the essentials. LinkedOut publishes broad role and optional country only—not your account identity, exact title, tenure, or departure date.
       </p>
+
+      {!user && <div className="notice"><strong>Start before signing up.</strong> Complete the AI interview or manual form first. We’ll securely keep the text fields in this browser and ask you to create an account only when you submit.</div>}
 
       {query.error && (
         <div className="errorBanner">
@@ -72,11 +67,13 @@ export default async function SubmitPage({
       <VoiceExitInterview companies={companies} />
 
       <form
-        action={createStoryAction}
+        action={action}
         className="formStack"
         data-share-form="true"
       >
         <FormAutofillBridge />
+        <ShareDraftGuard authenticated={Boolean(user)} />
+        {editStory && <input type="hidden" name="storyId" value={editStory.id} />}
         <fieldset>
           <legend>Employment</legend>
 
@@ -86,73 +83,36 @@ export default async function SubmitPage({
           </label>
 
           <label>
-            Job title
-            <input
-              name="jobTitle"
-              required
-              maxLength={100}
-              placeholder="Software Engineer"
-            />
-          </label>
-
-          <label>
-            Role family
+            Broad role
             <input
               name="roleFamily"
               required
               maxLength={80}
-              placeholder="Engineering"
+              placeholder="e.g. Engineering, Design, Operations"
+              defaultValue={editStory?.roleFamily || ""}
+              list="role-options"
             />
+            <datalist id="role-options">
+              <option value="Engineering" />
+              <option value="Product" />
+              <option value="Design" />
+              <option value="Sales" />
+              <option value="Marketing" />
+              <option value="Operations" />
+              <option value="Customer support" />
+              <option value="Finance" />
+              <option value="People / HR" />
+            </datalist>
           </label>
 
           <label>
-            Location
+            Country <span className="muted">(optional)</span>
             <input
-              name="location"
-              required
+              name="country"
               maxLength={100}
-              placeholder="Bengaluru"
+              placeholder="e.g. India"
+              defaultValue={editStory?.location || ""}
             />
-          </label>
-
-          <label>
-            Months worked there
-            <input
-              name="tenureMonths"
-              type="number"
-              min={1}
-              max={600}
-              required
-              placeholder="24"
-            />
-          </label>
-
-          <label>
-            How did the employment end?
-            <select
-              name="departureType"
-              required
-            >
-              <option value="RESIGNED">
-                I resigned
-              </option>
-
-              <option value="LAID_OFF">
-                I was laid off
-              </option>
-
-              <option value="TERMINATED">
-                Employment was terminated
-              </option>
-
-              <option value="CONTRACT_ENDED">
-                Contract ended
-              </option>
-
-              <option value="OTHER">
-                Other
-              </option>
-            </select>
           </label>
         </fieldset>
 
@@ -164,7 +124,9 @@ export default async function SubmitPage({
             <select
               name="primaryReason"
               required
+              defaultValue={editStory?.primaryReason || ""}
             >
+              <option value="" disabled>Select the main reason</option>
               {EXIT_REASON_VALUES.map(
                 (reason) => (
                   <option
@@ -178,15 +140,7 @@ export default async function SubmitPage({
             </select>
           </label>
 
-          <OtherReasonsPicker />
-        </fieldset>
-
-        <fieldset>
-          <legend>Employee sentiment</legend>
-
-          {ratings.map(([name, label]) => (
-            <RatingSlider key={name} name={name} label={label} />
-          ))}
+          <OtherReasonsPicker initialReasons={editStory?.otherReasons || []} />
         </fieldset>
 
         <fieldset>
@@ -197,20 +151,20 @@ export default async function SubmitPage({
             <textarea
               name="positiveExperience"
               required
-              minLength={20}
+              minLength={10}
               maxLength={4000}
               rows={5}
+              defaultValue={editStory?.positiveExperience || ""}
             />
           </label>
 
           <label>
-            What ultimately made you leave?
+            Anything else about why you left? <span className="muted">(optional)</span>
             <textarea
               name="reasonForLeaving"
-              required
-              minLength={30}
               maxLength={5000}
               rows={7}
+              defaultValue={editStory?.reasonForLeaving || ""}
             />
           </label>
 
@@ -220,13 +174,12 @@ export default async function SubmitPage({
             <textarea
               name="wishIKnew"
               required
-              minLength={20}
+              minLength={10}
               maxLength={3000}
               rows={5}
+              defaultValue={editStory?.wishIKnew || ""}
             />
           </label>
-
-          <StoryImageInput />
         </fieldset>
 
         <fieldset>
@@ -237,7 +190,9 @@ export default async function SubmitPage({
             <select
               name="recommendCompany"
               required
+              defaultValue={editStory?.recommendCompany || ""}
             >
+              <option value="" disabled>Choose one</option>
               <option value="YES">Yes</option>
               <option value="MAYBE">
                 Maybe
@@ -251,7 +206,9 @@ export default async function SubmitPage({
             <select
               name="workHereAgain"
               required
+              defaultValue={editStory?.workHereAgain || ""}
             >
+              <option value="" disabled>Choose one</option>
               <option value="YES">Yes</option>
               <option value="MAYBE">
                 Maybe
@@ -261,14 +218,12 @@ export default async function SubmitPage({
           </label>
         </fieldset>
 
-        <div className="notice">
-          Your public alias is separate from your
-          login account. Submissions are moderated
-          before becoming public.
-        </div>
+        <PrivacyCheck />
+
+        <div className="notice"><strong>Your story is anonymous.</strong> Your account email is never displayed with a public experience. Employers never receive contributor identity. Voice transcription and analysis stay on-device; recordings are not uploaded or stored. Every experience is reviewed before publishing.</div>
 
         <button className="primaryButton">
-          Submit experience
+          {editStory ? "Save and resubmit for review" : "Submit experience"}
         </button>
       </form>
     </div>

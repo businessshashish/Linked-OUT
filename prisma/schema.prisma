@@ -93,6 +93,7 @@ model User {
   verifications  EmploymentVerification[]
   employerClaims EmployerClaim[]
   reports         ContentReport[]
+  companyRequests CompanyRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -155,23 +156,23 @@ model ExitStory {
 
   authorAlias String
 
-  jobTitle     String
+  jobTitle     String?
   roleFamily   String
-  location     String
-  tenureMonths Int
+  location     String?
+  tenureMonths Int?
 
-  departureType DepartureType
+  departureType DepartureType?
 
   primaryReason ExitReason
   otherReasons  ExitReason[]
 
-  managementScore   Int
-  compensationScore Int
-  workLifeScore     Int
-  careerGrowthScore Int
-  learningScore     Int
-  cultureScore      Int
-  jobSecurityScore  Int
+  managementScore   Int?
+  compensationScore Int?
+  workLifeScore     Int?
+  careerGrowthScore Int?
+  learningScore     Int?
+  cultureScore      Int?
+  jobSecurityScore  Int?
 
   positiveExperience String
   reasonForLeaving   String
@@ -299,6 +300,19 @@ model ContentReport {
 
   @@index([status])
   @@index([storyId])
+}
+
+model CompanyRequest {
+  id          String   @id @default(cuid())
+  name        String
+  website     String?
+  requesterId String?
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+
+  requester User? @relation(fields: [requesterId], references: [id], onDelete: SetNull)
+
+  @@index([status])
 }
 
 model AuditLog {

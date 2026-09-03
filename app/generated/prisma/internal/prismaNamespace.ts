@@ -406,6 +406,7 @@ export const ModelName = {
   EmployerClaim: 'EmployerClaim',
   CompanyResponse: 'CompanyResponse',
   ContentReport: 'ContentReport',
+  CompanyRequest: 'CompanyRequest',
   AuditLog: 'AuditLog'
 } as const
 
@@ -422,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "publicIdentity" | "session" | "company" | "exitStory" | "employmentVerification" | "employerClaim" | "companyResponse" | "contentReport" | "auditLog"
+    modelProps: "user" | "publicIdentity" | "session" | "company" | "exitStory" | "employmentVerification" | "employerClaim" | "companyResponse" | "contentReport" | "companyRequest" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1092,6 +1093,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CompanyRequest: {
+      payload: Prisma.$CompanyRequestPayload<ExtArgs>
+      fields: Prisma.CompanyRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompanyRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompanyRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.CompanyRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompanyRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>
+        }
+        findMany: {
+          args: Prisma.CompanyRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>[]
+        }
+        create: {
+          args: Prisma.CompanyRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>
+        }
+        createMany: {
+          args: Prisma.CompanyRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompanyRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.CompanyRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>
+        }
+        update: {
+          args: Prisma.CompanyRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.CompanyRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompanyRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompanyRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.CompanyRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.CompanyRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompanyRequest>
+        }
+        groupBy: {
+          args: Prisma.CompanyRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompanyRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyRequestCountAggregateOutputType> | number
+        }
+      }
+    }
     AuditLog: {
       payload: Prisma.$AuditLogPayload<ExtArgs>
       fields: Prisma.AuditLogFieldRefs
@@ -1360,6 +1435,18 @@ export const ContentReportScalarFieldEnum = {
 } as const
 
 export type ContentReportScalarFieldEnum = (typeof ContentReportScalarFieldEnum)[keyof typeof ContentReportScalarFieldEnum]
+
+
+export const CompanyRequestScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  website: 'website',
+  requesterId: 'requesterId',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type CompanyRequestScalarFieldEnum = (typeof CompanyRequestScalarFieldEnum)[keyof typeof CompanyRequestScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {
@@ -1798,6 +1885,7 @@ export type GlobalOmitConfig = {
   employerClaim?: Prisma.EmployerClaimOmit
   companyResponse?: Prisma.CompanyResponseOmit
   contentReport?: Prisma.ContentReportOmit
+  companyRequest?: Prisma.CompanyRequestOmit
   auditLog?: Prisma.AuditLogOmit
 }
 

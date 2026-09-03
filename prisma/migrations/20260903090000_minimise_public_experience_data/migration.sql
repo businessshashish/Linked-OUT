@@ -1,0 +1,12 @@
+ALTER TABLE "ExitStory"
+  ALTER COLUMN "jobTitle" DROP NOT NULL,
+  ALTER COLUMN "location" DROP NOT NULL,
+  ALTER COLUMN "tenureMonths" DROP NOT NULL,
+  ALTER COLUMN "departureType" DROP NOT NULL,
+  ALTER COLUMN "managementScore" DROP NOT NULL,
+  ALTER COLUMN "compensationScore" DROP NOT NULL,
+  ALTER COLUMN "workLifeScore" DROP NOT NULL,
+  ALTER COLUMN "careerGrowthScore" DROP NOT NULL,
+  ALTER COLUMN "learningScore" DROP NOT NULL,
+  ALTER COLUMN "cultureScore" DROP NOT NULL,
+  ALTER COLUMN "jobSecurityScore" DROP NOT NULL;

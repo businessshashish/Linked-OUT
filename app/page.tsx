@@ -2,27 +2,31 @@ import Link from "next/link";
 
 import prisma from "@/lib/prisma";
 import { companyAnalytics } from "@/lib/analytics";
-import { isDemoDataEnabled } from "@/lib/demo-data";
 import { getCurrentUser } from "@/lib/session";
+import { searchCompanies } from "@/lib/company-search";
+import { requestCompanyAction } from "@/app/actions";
 import StoryCard from "@/components/StoryCard";
 import FeedLeftRail from "@/components/FeedLeftRail";
+import FunnelTracker from "@/components/FunnelTracker";
 
 export default async function Home({
   searchParams
 }: {
   searchParams: Promise<{
     q?: string;
+    requested?: string;
+    error?: string;
   }>;
 }) {
-  const { q = "" } = await searchParams;
+  const pageParams = await searchParams;
+  const { q = "" } = pageParams;
 
   const query = q.trim();
-  const demoDataEnabled = await isDemoDataEnabled();
   const user = await getCurrentUser();
 
   const feedStories = await prisma.exitStory.findMany({
     where: {
-      ...(demoDataEnabled ? {} : { isDemo: false }),
+      isDemo: false,
       status: "APPROVED"
     },
     include: {
@@ -33,8 +37,9 @@ export default async function Home({
           logoUrl: true
         }
       },
+      publicIdentity: { select: { userId: true } },
       responses: {
-        where: { status: "APPROVED" },
+        where: { status: "APPROVED", claim: { is: { status: "APPROVED" } } },
         orderBy: { createdAt: "desc" }
       }
     },
@@ -46,6 +51,12 @@ export default async function Home({
   });
 
   const identityId = user?.publicIdentity?.id;
+  const feedUserIds = feedStories.map((story) => story.publicIdentity?.userId).filter((id): id is string => Boolean(id));
+  const verifiedFeedUsers = feedUserIds.length ? await prisma.employmentVerification.findMany({
+    where: { userId: { in: feedUserIds }, status: "APPROVED" },
+    select: { userId: true, companyId: true }
+  }) : [];
+  const verifiedFeedKeys = new Set(verifiedFeedUsers.map((verification) => `${verification.userId}:${verification.companyId}`));
   const [publishedStories, pendingStories] = identityId
     ? await Promise.all([
         prisma.exitStory.count({ where: { publicIdentityId: identityId, status: "APPROVED" } }),
@@ -55,47 +66,25 @@ export default async function Home({
 
   const companies = query
     ? await prisma.company.findMany({
-        where: {
-          OR: [
-            {
-              name: {
-                contains: query,
-                mode: "insensitive"
-              }
-            },
-            {
-              industry: {
-                contains: query,
-                mode: "insensitive"
-              }
-            },
-            {
-              location: {
-                contains: query,
-                mode: "insensitive"
-              }
-            }
-          ]
-        },
-
         include: {
           stories: {
             where: {
-              ...(demoDataEnabled ? {} : { isDemo: false }),
+              isDemo: false,
               status: "APPROVED"
             }
           }
         },
 
-        take: 12,
         orderBy: {
           name: "asc"
         }
       })
     : [];
+  const searchResults = query ? searchCompanies(companies, query).slice(0, 12) : [];
 
   return (
     <>
+      <FunnelTracker event="landing_view" />
       <section className="hero">
         <div className="eyebrow">
           THE OTHER SIDE OF WORK
@@ -148,14 +137,13 @@ export default async function Home({
             </div>
           </div>
 
-          {!companies.length && (
-            <div className="emptyState">
-              No companies found.
-            </div>
-          )}
+          {pageParams.error && <div className="errorBanner">{pageParams.error}</div>}
+          {pageParams.requested && <div className="successBanner">Thanks—{pageParams.requested} has been sent for admin review.</div>}
+
+          {!searchResults.length && <div className="emptyState"><h3>Can’t find your company?</h3><p>Request it for admin review. We never add arbitrary public companies automatically.</p><form action={requestCompanyAction} className="requestCompanyForm"><input name="name" defaultValue={query} required maxLength={160} /><input name="website" placeholder="Company website (optional)" type="url" /><button className="primaryButton">Request company</button></form></div>}
 
           <div className="companyGrid">
-            {companies.map((company) => {
+            {searchResults.map((company) => {
               const analytics =
                 companyAnalytics(company.stories);
 
@@ -184,16 +172,12 @@ export default async function Home({
                     )}
 
                     <div className="companyStats">
-                      <strong>
-                        {analytics.overall ??
-                          "—"}
-                        /100
-                      </strong>
-
                       <span>
-                        {analytics.topReason
-                          ?.label ||
-                          "Building data"}
+                        {analytics.sampleSize < 5
+                          ? "Individual experiences only"
+                          : analytics.percentagesAllowed
+                            ? "Patterns available"
+                            : "Early patterns"}
                       </span>
 
                       <span>
@@ -299,8 +283,20 @@ export default async function Home({
                 </Link>
                 <StoryCard
                   story={{
-                    ...story,
-                    verified: false,
+                    id: story.id,
+                    authorAlias: story.authorAlias,
+                    roleFamily: story.roleFamily,
+                    location: story.location,
+                    primaryReason: story.primaryReason,
+                    otherReasons: story.otherReasons,
+                    positiveExperience: story.positiveExperience,
+                    reasonForLeaving: story.reasonForLeaving,
+                    wishIKnew: story.wishIKnew,
+                    recommendCompany: story.recommendCompany,
+                    workHereAgain: story.workHereAgain,
+                    createdAt: story.createdAt,
+                    responses: story.responses.map((response) => ({ id: response.id, body: response.body, authorLabel: response.authorLabel, createdAt: response.createdAt, claimId: response.claimId })),
+                    verified: Boolean(story.publicIdentity && verifiedFeedKeys.has(`${story.publicIdentity.userId}:${story.companyId}`)),
                     canReport: Boolean(user)
                   }}
                 />
@@ -311,25 +307,11 @@ export default async function Home({
             )}
           </div>
 
-          <aside className="adRail" aria-label="Sponsored content">
-            <div className="adRailLabel">Sponsored</div>
-            <article className="adCard">
-              <div className="adCardTopline">
-                <span className="adBrandMark">N</span>
-                <span><strong>Northstar</strong><small>For teams building better work</small></span>
-              </div>
-              <h3>Make work worth staying for.</h3>
-              <p>See how high-performing teams build clarity, trust, and growth into the everyday.</p>
-              <button className="adButton" type="button">Learn more</button>
-            </article>
-            <article className="adCard adCardCompact">
-              <div className="adCardTopline">
-                <span className="adBrandMark adBrandMarkBlue">V</span>
-                <span><strong>Vertex People</strong><small>Workplace intelligence</small></span>
-              </div>
-              <p>Turn employee feedback into action your people can feel.</p>
-              <button className="adButton" type="button">Explore insights</button>
-            </article>
+          <aside className="adRail contributionRail" aria-label="Contribute an experience">
+            <div className="eyebrow">YOUR EXPERIENCE MATTERS</div>
+            <h3>Help make workplace information more useful.</h3>
+            <p>Share a firsthand experience anonymously. Every submission is reviewed before it is published.</p>
+            <Link href="/submit" className="secondaryButton inlineButton">Share your experience</Link>
           </aside>
         </div>
       </section>

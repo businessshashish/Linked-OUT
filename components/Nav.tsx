@@ -1,15 +1,12 @@
 import Link from "next/link";
 
 import {
-  logoutAction,
-  toggleDemoDataAction
+  logoutAction
 } from "@/app/actions";
 import { getCurrentUser } from "@/lib/session";
-import { isDemoDataEnabled } from "@/lib/demo-data";
 
 export default async function Nav() {
   const user = await getCurrentUser();
-  const demoDataEnabled = await isDemoDataEnabled();
 
   return (
     <header className="nav">
@@ -33,18 +30,6 @@ export default async function Nav() {
             <span className="navIcon uiIcon uiIcon-share" aria-hidden="true" />
             <span>Share</span>
           </Link>
-
-          <form action={toggleDemoDataAction} className="demoToggleForm">
-            <button
-              className={`demoToggle ${demoDataEnabled ? "isOn" : ""}`}
-              role="switch"
-              aria-checked={demoDataEnabled}
-              title="Toggle demo company stories"
-            >
-              <span className="demoToggleTrack"><span /></span>
-              <span className="demoToggleLabel">Demo data</span>
-            </button>
-          </form>
 
           {user ? (
             <>

@@ -5,13 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { type ExitInterviewExtraction } from "@/lib/ai/exit-interview";
 import { extractExplicitTranscriptFacts, mergeTranscriptFacts } from "@/lib/ai/transcript-fallback";
 import { matchCompanyName } from "@/lib/ai/company-matching";
+import { trackFunnelEventAction } from "@/app/actions";
 
 const MAX_SECONDS = 120;
 const EXTRACTION_TIMEOUT_MS = 25_000;
 const REQUIRED_REVIEW_FIELDS = [
-  "jobTitle", "roleFamily", "location", "tenureMonths", "departureType", "primaryReason",
-  "managementScore", "compensationScore", "workLifeScore", "careerGrowthScore", "learningScore",
-  "cultureScore", "jobSecurityScore", "positiveExperience", "reasonForLeaving", "wishIKnew",
+  "roleFamily", "primaryReason", "positiveExperience", "wishIKnew",
   "recommendCompany", "workHereAgain"
 ] as const;
 
@@ -32,6 +31,16 @@ function microphoneError(error: unknown) {
     return "No microphone was found. Connect one, or use the manual form.";
   }
   return error instanceof Error ? error.message : "Microphone access failed.";
+}
+
+function displayField(value: string | number | null | string[]) {
+  if (value === null || (Array.isArray(value) && value.length === 0)) return "Not provided";
+  if (Array.isArray(value)) return value.map((item) => item.replaceAll("_", " ")).join(", ");
+  return String(value).replaceAll("_", " ");
+}
+
+function labelFor(name: string) {
+  return name.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
 }
 
 export default function VoiceExitInterview({ companies }: { companies: Company[] }) {
@@ -114,7 +123,7 @@ export default function VoiceExitInterview({ companies }: { companies: Company[]
     const match = matchCompanyName(extracted.companyName, companies);
     if (match) dispatchAutofill("companyId", match.id);
     const values = extracted as unknown as Record<string, string | number | null>;
-    for (const name of ["jobTitle", "roleFamily", "location", "tenureMonths", "departureType", "primaryReason", "managementScore", "compensationScore", "workLifeScore", "careerGrowthScore", "learningScore", "cultureScore", "jobSecurityScore", "positiveExperience", "reasonForLeaving", "wishIKnew", "recommendCompany", "workHereAgain"]) dispatchAutofill(name, values[name]);
+    for (const name of ["roleFamily", "primaryReason", "positiveExperience", "reasonForLeaving", "wishIKnew", "recommendCompany", "workHereAgain"]) dispatchAutofill(name, values[name]);
     document.dispatchEvent(new CustomEvent("linkedout:autofill-reasons", { detail: extracted.otherReasons }));
     const form = document.querySelector<HTMLFormElement>('[data-share-form="true"]');
     form?.querySelectorAll(".ai-missing, .ai-inferred").forEach((element) => element.classList.remove("ai-missing", "ai-inferred"));
@@ -160,6 +169,7 @@ export default function VoiceExitInterview({ companies }: { companies: Company[]
         ...(!extracted.recommendCompany || !extracted.workHereAgain ? ["Your recommendations were not explicit. Please choose them manually."] : [])
       ];
       setFields(extracted); setMissingFields(review.missing); setInferredFields(extracted.inferredFields); setWarnings(nextWarnings); setStatus("Review before submitting — you can edit every answer."); setProgress(100);
+      void trackFunnelEventAction("ai_interview_completed");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Local AI processing failed. The manual form is still available.");
     } finally { setProcessing(false); }
@@ -169,6 +179,7 @@ export default function VoiceExitInterview({ companies }: { companies: Company[]
     setError(""); setStatus(""); setTranscript(""); setFields(null); setWarnings([]); setMissingFields([]); setInferredFields([]); setSeconds(0);
     try {
       if (capability !== "supported") throw new Error("AI Exit Interview isn’t supported on this device yet. You can still use the manual form.");
+      void trackFunnelEventAction("ai_interview_started");
       const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
       streamRef.current = stream; chunksRef.current = [];
       const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus") ? "audio/webm;codecs=opus" : "";
@@ -188,11 +199,11 @@ export default function VoiceExitInterview({ companies }: { companies: Company[]
       <div className="ai-exit-heading"><div><strong>AI Exit Interview</strong><p>Tell us what happened naturally. AI runs privately on your device and fills the form for you.</p></div></div>
       {capability === "checking" && <div className="ai-processing">Checking whether local AI is available on this device…</div>}
       {capability === "unsupported" && <div className="ai-error">AI Exit Interview isn’t supported on this device yet. You can still use the manual form below.</div>}
-      {capability === "supported" && !recording && !processing && <button type="button" className="ai-record-button" onClick={() => void startRecording()}>Record my experience</button>}
+      {capability === "supported" && !recording && !processing && <div className="ai-choiceRow"><button type="button" className="ai-record-button" onClick={() => void startRecording()}>🎙 Take AI Exit Interview</button><button type="button" className="ai-manual-button" onClick={() => document.querySelector('[data-share-form="true"]')?.scrollIntoView({ behavior: "smooth", block: "start" })}>Fill manually</button></div>}
       {recording && <div className="ai-recording"><span className="recording-dot" /> Recording · {seconds}s <button type="button" onClick={stopRecording}>Stop and fill form</button></div>}
       {processing && <div className="ai-processing">{status}<progress value={progress} max="100" /></div>}
       {error && <div className="ai-error">{error}</div>}
-      {fields && <div className="ai-note"><strong>Review before submitting.</strong> Form values were filled locally; edit anything you want before using the normal submit button.</div>}
+      {fields && <div className="ai-review"><div className="ai-note"><strong>Review before submitting.</strong> Form values were filled locally; edit anything you want before using the normal submit button.</div><h3>Here’s what we understood</h3><dl><div><dt>Company</dt><dd>{displayField(fields.companyName)}</dd></div><div><dt>Broad role</dt><dd>{displayField(fields.roleFamily)}</dd></div><div><dt>Primary reason</dt><dd>{displayField(fields.primaryReason)}</dd></div><div><dt>Secondary reasons</dt><dd>{displayField(fields.otherReasons)}</dd></div><div><dt>Would recommend</dt><dd>{displayField(fields.recommendCompany)}</dd></div><div><dt>Would return</dt><dd>{displayField(fields.workHereAgain)}</dd></div></dl>{missingFields.length > 0 && <div className="ai-needed"><strong>Still needed</strong><span>{missingFields.map(labelFor).join(", ")}</span></div>}</div>}
       {inferredFields.length > 0 && <div className="ai-inferred-summary">AI inferred {inferredFields.length} field{inferredFields.length === 1 ? "" : "s"}. Please review the blue-marked fields.</div>}
       {missingFields.length > 0 && <div className="ai-missing-summary"><strong>Almost done.</strong> Complete the {missingFields.length} missing field{missingFields.length === 1 ? "" : "s"} marked in orange.</div>}
       {warnings.map((warning) => <div className="ai-warning" key={warning}>{warning}</div>)}

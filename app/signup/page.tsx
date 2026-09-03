@@ -1,18 +1,21 @@
 import Link from "next/link";
 
 import { signupAction } from "@/app/actions";
+import FunnelTracker from "@/components/FunnelTracker";
 
 export default async function SignupPage({
   searchParams
 }: {
   searchParams: Promise<{
     error?: string;
+    returnTo?: string;
   }>;
 }) {
   const query = await searchParams;
 
   return (
     <div className="authCard">
+      <FunnelTracker event="signup_started" />
       <div className="eyebrow">
         CREATE ACCOUNT
       </div>
@@ -34,6 +37,7 @@ export default async function SignupPage({
         action={signupAction}
         className="formStack"
       >
+        <input type="hidden" name="returnTo" value={query.returnTo || ""} />
         <label>
           Email
           <input
@@ -62,7 +66,7 @@ export default async function SignupPage({
 
       <p>
         Already joined?{" "}
-        <Link href="/login">Log in</Link>
+        <Link href={query.returnTo ? `/login?returnTo=${encodeURIComponent(query.returnTo)}` : "/login"}>Log in</Link>
       </p>
     </div>
   );

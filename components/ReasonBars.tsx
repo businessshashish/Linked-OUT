@@ -1,14 +1,16 @@
 type Reason = {
   reason: string;
   label: string;
-  percentage: number;
+  percentage: number | null;
   count: number;
 };
 
 export default function ReasonBars({
-  reasons
+  reasons,
+  showPercentages = false
 }: {
   reasons: Reason[];
+  showPercentages?: boolean;
 }) {
   if (!reasons.length) {
     return (
@@ -17,6 +19,8 @@ export default function ReasonBars({
       </p>
     );
   }
+
+  const maxCount = Math.max(...reasons.map((reason) => reason.count));
 
   return (
     <div className="barList">
@@ -28,16 +32,14 @@ export default function ReasonBars({
           <div className="barMeta">
             <span>{reason.label}</span>
 
-            <strong>
-              {reason.percentage}%
-            </strong>
+            <strong>{showPercentages && reason.percentage !== null ? `${reason.percentage}%` : `${reason.count} mention${reason.count === 1 ? "" : "s"}`}</strong>
           </div>
 
           <div className="barTrack">
             <div
               className="barFill dark"
               style={{
-                width: `${reason.percentage}%`
+                width: `${showPercentages && reason.percentage !== null ? reason.percentage : Math.round((reason.count / maxCount) * 100)}%`
               }}
             />
           </div>

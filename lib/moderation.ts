@@ -32,6 +32,30 @@ export function moderationFlags(text: string) {
     flags.add("POSSIBLE_PHONE_OR_PII");
   }
 
+  if (/\b(?:my manager|my boss|manager)\s+[A-Z][a-z]+/.test(text)) {
+    flags.add("POSSIBLE_NAMED_PRIVATE_PERSON");
+  }
+
+  if (/\b(?:on|dated?)\s+(?:\d{1,2}[/-]){2}\d{2,4}\b/i.test(text)) {
+    flags.add("EXACT_IDENTIFYING_DATE");
+  }
+
+  if (/\bteam of (?:[1-9]|ten)\b/i.test(text)) {
+    flags.add("SMALL_TEAM_ANONYMITY_RISK");
+  }
+
+  if (/\b(?:project|client|customer|account)\s+[A-Z][A-Za-z0-9-]{2,}/.test(text)) {
+    flags.add("POSSIBLE_CONFIDENTIAL_PROJECT_OR_CUSTOMER");
+  }
+
+  if (/\b(?:my manager|my boss|director|lead)\s+(?:is|was|called|named)\b/i.test(text)) {
+    flags.add("POSSIBLE_PERSONAL_ATTACK_OR_NAMED_ACCUSATION");
+  }
+
+  if (/\b(?:buy now|crypto|telegram|whatsapp me|guaranteed income)\b/i.test(text)) {
+    flags.add("POSSIBLE_SPAM");
+  }
+
   if (urlRegex.test(text)) {
     flags.add("EXTERNAL_LINK");
   }

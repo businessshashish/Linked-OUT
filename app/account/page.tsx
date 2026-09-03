@@ -1,8 +1,10 @@
 import prisma from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
+import Link from "next/link";
 
 import {
   deleteAccountAction,
+  deleteStoryAction,
   requestVerificationAction
 } from "@/app/actions";
 
@@ -137,16 +139,31 @@ export default async function AccountPage({
                   {story.company.name}
                 </strong>
 
-                <div className="muted">
-                  {story.jobTitle}
-                </div>
+                <div className="muted">{story.roleFamily}</div>
               </div>
 
-              <span className="statusBadge">
-                {story.status}
-              </span>
+              <div className="storyControlGroup">
+                <span className={`statusBadge status-${story.status.toLowerCase()}`}>
+                  {story.status === "PENDING" ? "PENDING MODERATION" : story.status === "APPROVED" ? "PUBLISHED" : "REJECTED / NEEDS CHANGES"}
+                </span>
+                {story.status === "APPROVED" && <Link className="textButton" href={`/company/${story.company.slug}#experience-${story.id}`}>View public experience</Link>}
+                <Link className="textButton" href={`/submit?edit=${story.id}`}>Edit</Link>
+                <form action={deleteStoryAction}>
+                  <input type="hidden" name="storyId" value={story.id} />
+                  <button className="textButton dangerTextButton">Delete</button>
+                </form>
+              </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="panel">
+        <div className="eyebrow">PRIVACY DETAILS</div>
+        <h2>What is public and private</h2>
+        <div className="twoColumn">
+          <div><strong>Public with an approved experience</strong><p className="muted">Company, broad role, optional country, selected exit themes, your reviewed answers, and whether employment is verified.</p></div>
+          <div><strong>Always private</strong><p className="muted">Your name, email, account ID, session data, precise title, tenure, departure date, verification evidence, and the link between your account and public experience.</p></div>
         </div>
       </section>
 
@@ -160,10 +177,7 @@ export default async function AccountPage({
         </h2>
 
         <p className="muted">
-          The MVP stores verification requests but
-          does not yet upload sensitive employment
-          documents. Document verification is
-          handled manually.
+          Verification requests are reviewed manually. Evidence is never public. We keep the minimum needed to review it, then clear the email or note once verification is decided.
         </p>
 
         <form

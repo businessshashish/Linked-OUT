@@ -12,15 +12,15 @@ type Response = {
   body: string;
   authorLabel: string;
   createdAt: Date;
+  claimId?: string | null;
 };
 
 type StoryProps = {
   id: string;
   authorAlias: string;
 
-  jobTitle: string;
-  location: string;
-  tenureMonths: number;
+  roleFamily: string;
+  location?: string | null;
 
   primaryReason: string;
   otherReasons: string[];
@@ -38,21 +38,7 @@ type StoryProps = {
   responses: Response[];
 
   canReport: boolean;
-  imageUrl?: string | null;
 };
-
-function tenure(months: number) {
-  if (months < 12) {
-    return `${months} months`;
-  }
-
-  const years = Math.floor(months / 12);
-  const remainingMonths = months % 12;
-
-  return remainingMonths
-    ? `${years}y ${remainingMonths}m`
-    : `${years} ${years === 1 ? "year" : "years"}`;
-}
 
 export default function StoryCard({
   story
@@ -65,25 +51,15 @@ export default function StoryCard({
   ];
 
   return (
-    <article className="storyCard">
+    <article className="storyCard" id={`experience-${story.id}`}>
       <div className="storyHeader">
         <div>
           <strong>{story.authorAlias}</strong>
 
-          {story.verified && (
-            <span className="verified">
-              Employment verified
-            </span>
-          )}
+          <span className="verified">{story.verified ? "Verified former employee" : "Anonymous contributor"}</span>
 
           <div className="muted">
-            Former {story.jobTitle} ·{" "}
-            {story.location}
-          </div>
-
-          <div className="muted">
-            Worked here:{" "}
-            {tenure(story.tenureMonths)}
+            Former {story.roleFamily}{story.location ? ` · ${story.location}` : ""}
           </div>
         </div>
       </div>
@@ -106,19 +82,15 @@ export default function StoryCard({
         <p>{story.positiveExperience}</p>
       </div>
 
-      <div className="storySection">
+      {story.reasonForLeaving && <div className="storySection">
         <h4>Why I left</h4>
         <p>{story.reasonForLeaving}</p>
-      </div>
+      </div>}
 
       <div className="storySection highlight">
         <h4>What I wish I knew</h4>
         <p>{story.wishIKnew}</p>
       </div>
-
-      {story.imageUrl && (
-        <img className="storyImage" src={story.imageUrl} alt="Shared workplace experience" />
-      )}
 
       <div className="storyAnswers">
         <span>
@@ -139,7 +111,7 @@ export default function StoryCard({
           className="companyResponse"
           key={response.id}
         >
-          <strong>Company response</strong>
+          <strong>Verified company response</strong>
 
           <p>{response.body}</p>
 

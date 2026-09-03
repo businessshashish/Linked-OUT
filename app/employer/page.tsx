@@ -164,7 +164,7 @@ export default async function EmployerPage({
                       value={story.id}
                       key={story.id}
                     >
-                      {story.jobTitle} —{" "}
+                      Former {story.roleFamily} —{" "}
                       {story.reasonForLeaving.slice(
                         0,
                         60

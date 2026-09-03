@@ -16,19 +16,8 @@ export const signupSchema = z.object({
 export const storySchema = z.object({
   companyId: z.string().min(1),
 
-  jobTitle: z.string().min(2).max(100),
   roleFamily: z.string().min(2).max(80),
-  location: z.string().min(2).max(100),
-
-  tenureMonths: z.number().int().min(1).max(600),
-
-  departureType: z.enum([
-    "RESIGNED",
-    "LAID_OFF",
-    "TERMINATED",
-    "CONTRACT_ENDED",
-    "OTHER"
-  ]),
+  location: z.string().trim().max(100).nullable(),
 
   primaryReason: z.enum(EXIT_REASON_VALUES),
 
@@ -36,17 +25,9 @@ export const storySchema = z.object({
     .array(z.enum(EXIT_REASON_VALUES))
     .max(2),
 
-  managementScore: z.number().int().min(1).max(5),
-  compensationScore: z.number().int().min(1).max(5),
-  workLifeScore: z.number().int().min(1).max(5),
-  careerGrowthScore: z.number().int().min(1).max(5),
-  learningScore: z.number().int().min(1).max(5),
-  cultureScore: z.number().int().min(1).max(5),
-  jobSecurityScore: z.number().int().min(1).max(5),
-
-  positiveExperience: z.string().min(20).max(4000),
-  reasonForLeaving: z.string().min(30).max(5000),
-  wishIKnew: z.string().min(20).max(3000),
+  positiveExperience: z.string().trim().min(10).max(4000),
+  reasonForLeaving: z.string().trim().max(5000),
+  wishIKnew: z.string().trim().min(10).max(3000),
 
   recommendCompany: z.enum(["YES", "MAYBE", "NO"]),
   workHereAgain: z.enum(["YES", "MAYBE", "NO"])

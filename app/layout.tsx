@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import "@/app/globals.css";
 
@@ -43,10 +44,9 @@ export default function RootLayout({
             </p>
           </div>
 
-          <p className="muted">
-            MVP · LinkedOut is currently a
-            working codename.
-          </p>
+          <nav className="footerLinks" aria-label="Footer">
+            <Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/community-guidelines">Community Rules</Link><Link href="/how-anonymity-works">How Anonymity Works</Link><Link href="/report-concern">Report a Concern</Link><Link href="/moderation">Moderation</Link><Link href="/contact">Contact</Link>
+          </nav>
         </footer>
       </body>
     </html>

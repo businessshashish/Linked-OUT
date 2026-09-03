@@ -6,11 +6,10 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { companyAnalytics } from "@/lib/analytics";
 import { getCurrentUser } from "@/lib/session";
-import { isDemoDataEnabled } from "@/lib/demo-data";
 
 import ReasonBars from "@/components/ReasonBars";
-import ScoreBars from "@/components/ScoreBars";
 import StoryCard from "@/components/StoryCard";
+import FunnelTracker from "@/components/FunnelTracker";
 
 export async function generateMetadata({
   params
@@ -57,7 +56,6 @@ export default async function CompanyPage({
   const query = await searchParams;
 
   const user = await getCurrentUser();
-  const demoDataEnabled = await isDemoDataEnabled();
 
   const company = await prisma.company.findUnique({
     where: {
@@ -72,7 +70,7 @@ export default async function CompanyPage({
   const stories = await prisma.exitStory.findMany({
     where: {
       companyId: company.id,
-      ...(demoDataEnabled ? {} : { isDemo: false }),
+      isDemo: false,
       status: "APPROVED"
     },
 
@@ -86,7 +84,8 @@ export default async function CompanyPage({
 
       responses: {
         where: {
-          status: "APPROVED"
+          status: "APPROVED",
+          claim: { is: { status: "APPROVED" } }
         },
 
         orderBy: {
@@ -132,8 +131,9 @@ export default async function CompanyPage({
       where: {
         companyId: company.id,
         storyId: null,
-        ...(demoDataEnabled ? {} : { isDemo: false }),
-        status: "APPROVED"
+        isDemo: false,
+        status: "APPROVED",
+        claim: { is: { status: "APPROVED" } }
       },
 
       orderBy: {
@@ -155,10 +155,10 @@ export default async function CompanyPage({
 
   return (
     <div className="container companyPage">
+      <FunnelTracker event="company_view" source={company.slug} />
       {query.submitted && (
         <div className="successBanner">
-          Your story was submitted for
-          moderation.
+          <strong>Your experience is in review.</strong> It is pending moderation for personal information, harassment, confidentiality concerns, and platform rules. You can see its status in your account.
         </div>
       )}
 
@@ -189,25 +189,12 @@ export default async function CompanyPage({
           <h1>{company.name}</h1>
 
           <p className="muted">
-            {company.industry} ·{" "}
-            {company.location} ·{" "}
-            {company.employeeCount ||
-              "Employee count unavailable"}
+            {[company.industry, company.location, company.employeeCount].filter(Boolean).join(" · ")}
           </p>
 
           <p>{company.description || analytics.summary}</p>
 
           <div className="companyHeroStats">
-            <div>
-              <strong>
-                {analytics.overall ?? "—"}
-              </strong>
-
-              <span>
-                Employee sentiment / 100
-              </span>
-            </div>
-
             <div>
               <strong>
                 {analytics.sampleSize}
@@ -254,87 +241,20 @@ export default async function CompanyPage({
         </aside>
 
         <div className="companyMain">
-          <section className="twoColumn">
-            <div className="panel">
-          <div className="eyebrow">
-            WHY PEOPLE LEFT
-          </div>
+          {analytics.aggregateAllowed && <section className="panel">
+            <div className="eyebrow">{analytics.percentagesAllowed ? "WHY PEOPLE LEFT" : "EARLY PATTERNS"}</div>
+            <h2>{analytics.percentagesAllowed ? "Departure patterns" : "Early patterns from former employees"}</h2>
+            <p className="muted">
+              {analytics.percentagesAllowed
+                ? `Percentages are based on ${analytics.sampleSize} published experiences. Employees can cite up to three reasons.`
+                : `Mention counts from ${analytics.sampleSize} published experiences. LinkedOut does not show percentages until there are at least 20 contributors.`}
+            </p>
+            <ReasonBars reasons={analytics.reasonBreakdown} showPercentages={analytics.percentagesAllowed} />
+          </section>}
 
-          <h2>Departure patterns</h2>
+          {analytics.sampleSize < 5 && <section className="panel emptyCompanyData"><h2>{analytics.sampleSize === 0 ? "No employee experiences yet. Be the first." : "Not enough data yet."}</h2><p className="muted">LinkedOut only shows aggregated workplace analytics after enough approved experiences are available.</p><Link href={`/submit?company=${company.slug}`} className="primaryButton inlineButton">Share your experience</Link></section>}
 
-          <p className="muted">
-            Percentage means the share of
-            published stories that cited the
-            reason. Employees can cite up to three
-            reasons.
-          </p>
-
-          <ReasonBars
-            reasons={analytics.reasonBreakdown}
-          />
-          </div>
-
-          <div className="panel">
-          <div className="eyebrow">
-            EMPLOYEE SENTIMENT
-          </div>
-
-          <h2>Workplace dimensions</h2>
-
-          <ScoreBars
-            scores={analytics.dimensions}
-          />
-            </div>
-          </section>
-
-          <section className="panel">
-        <div className="eyebrow">
-          EXPERIENCE TIMELINE
-        </div>
-
-        <h2>How the workplace changed</h2>
-
-        {!analytics.timeline.length ? (
-          <p className="muted">
-            No timeline data yet.
-          </p>
-        ) : (
-          <div className="timeline">
-            {analytics.timeline.map(
-              (entry) => (
-                <div
-                  className="timelineEntry"
-                  key={entry.year}
-                >
-                  <strong>{entry.year}</strong>
-
-                  <span>
-                    {entry.score === null
-                      ? "Not enough data"
-                      : `${entry.score}/100 sentiment`}
-                  </span>
-
-                  <span className="muted">
-                    {entry.count} experiences
-                  </span>
-
-                  {entry.topReason && (
-                    <span>
-                      Main exit theme:{" "}
-                      {
-                        entry.topReason
-                          .label
-                      }
-                    </span>
-                  )}
-                </div>
-              )
-            )}
-          </div>
-        )}
-          </section>
-
-          <section className="panel beforeJoin">
+          {analytics.aggregateAllowed && <section className="panel beforeJoin">
         <div className="eyebrow">
           BEFORE YOU JOIN
         </div>
@@ -356,7 +276,7 @@ export default async function CompanyPage({
               ))}
           </div>
         )}
-          </section>
+          </section>}
 
       {!!companyResponses.length && (
           <section className="panel">
@@ -376,9 +296,7 @@ export default async function CompanyPage({
               >
                 <p>{response.body}</p>
 
-                <small>
-                  {response.authorLabel}
-                </small>
+                <small>Verified company response · {response.authorLabel}</small>
               </div>
             )
           )}
@@ -403,8 +321,19 @@ export default async function CompanyPage({
             <StoryCard
               key={story.id}
               story={{
-                ...story,
-
+                id: story.id,
+                authorAlias: story.authorAlias,
+                roleFamily: story.roleFamily,
+                location: story.location,
+                primaryReason: story.primaryReason,
+                otherReasons: story.otherReasons,
+                positiveExperience: story.positiveExperience,
+                reasonForLeaving: story.reasonForLeaving,
+                wishIKnew: story.wishIKnew,
+                recommendCompany: story.recommendCompany,
+                workHereAgain: story.workHereAgain,
+                createdAt: story.createdAt,
+                responses: story.responses.map((response) => ({ id: response.id, body: response.body, authorLabel: response.authorLabel, createdAt: response.createdAt, claimId: response.claimId })),
                 verified: Boolean(
                   story.publicIdentity &&
                     verifiedUserIds.has(
@@ -432,7 +361,7 @@ export default async function CompanyPage({
           <div className="panel railCard">
             <div className="eyebrow">WHY PEOPLE LEAVE</div>
             <p className="muted">The strongest themes from published employee experiences.</p>
-            <ReasonBars reasons={analytics.reasonBreakdown.slice(0, 4)} />
+            {analytics.aggregateAllowed ? <ReasonBars reasons={analytics.reasonBreakdown.slice(0, 4)} showPercentages={analytics.percentagesAllowed} /> : <p className="muted">Patterns appear once at least five former employees have contributed.</p>}
           </div>
           <div className="panel railCard joinCard">
             <strong>Know before you join</strong>

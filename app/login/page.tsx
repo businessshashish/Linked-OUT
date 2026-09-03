@@ -7,6 +7,7 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{
     error?: string;
+    returnTo?: string;
   }>;
 }) {
   const query = await searchParams;
@@ -27,6 +28,7 @@ export default async function LoginPage({
         action={loginAction}
         className="formStack"
       >
+        <input type="hidden" name="returnTo" value={query.returnTo || ""} />
         <label>
           Email
           <input
@@ -52,7 +54,7 @@ export default async function LoginPage({
 
       <p>
         New here?{" "}
-        <Link href="/signup">
+        <Link href={query.returnTo ? `/signup?returnTo=${encodeURIComponent(query.returnTo)}` : "/signup"}>
           Create an account
         </Link>
       </p>

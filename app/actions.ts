@@ -4,7 +4,6 @@ import { randomBytes } from "node:crypto";
 import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -16,6 +15,7 @@ import {
   hashPassword,
   requireAdmin,
   requireUser,
+  getCurrentUser,
   verifyPassword
 } from "@/lib/session";
 
@@ -28,24 +28,6 @@ import {
   combinedStoryFlags,
   moderationFlags
 } from "@/lib/moderation";
-
-import {
-  DEMO_DATA_COOKIE,
-  isDemoDataEnabled
-} from "@/lib/demo-data";
-
-export async function toggleDemoDataAction(formData: FormData) {
-  const nextValue = (await isDemoDataEnabled()) ? "off" : "on";
-
-  (await cookies()).set(DEMO_DATA_COOKIE, nextValue, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 365
-  });
-
-  revalidatePath("/", "layout");
-}
 
 export async function updateProfilePhotoAction(formData: FormData) {
   const user = await requireUser();
@@ -107,6 +89,7 @@ function makeAlias() {
 export async function signupAction(
   formData: FormData
 ) {
+  const returnTo = safeReturnTo(String(formData.get("returnTo") || ""));
   const parsed = signupSchema.safeParse({
     email: String(formData.get("email") || "")
       .trim()
@@ -162,15 +145,17 @@ export async function signupAction(
       entityId: user.id
     }
   });
+  await trackFunnelEventAction("signup_completed");
 
   await createSession(user.id);
 
-  redirect("/");
+  redirect(returnTo || "/");
 }
 
 export async function loginAction(
   formData: FormData
 ) {
+  const returnTo = safeReturnTo(String(formData.get("returnTo") || ""));
   const email = String(
     formData.get("email") || ""
   )
@@ -199,13 +184,64 @@ export async function loginAction(
 
   await createSession(user.id);
 
-  redirect("/");
+  redirect(returnTo || "/");
+}
+
+function safeReturnTo(value: string) {
+  return value.startsWith("/") && !value.startsWith("//") ? value : "";
+}
+
+async function enforceActionRateLimit(actorUserId: string, action: string, maximum: number, windowMs: number) {
+  const attempts = await prisma.auditLog.count({
+    where: { actorUserId, action, createdAt: { gte: new Date(Date.now() - windowMs) } }
+  });
+  if (attempts >= maximum) {
+    throw new Error("Please wait before trying that again.");
+  }
 }
 
 export async function logoutAction() {
   await destroySession();
 
   redirect("/");
+}
+
+const funnelEvents = new Set(["landing_view", "company_view", "share_started", "ai_interview_started", "ai_interview_completed", "share_form_completed", "signup_started", "signup_completed", "story_submitted", "story_approved"]);
+
+/** Aggregate funnel telemetry only—never tie attribution to an anonymous public story. */
+export async function trackFunnelEventAction(event: string, source?: string) {
+  if (!funnelEvents.has(event)) return;
+  await prisma.auditLog.create({ data: { action: `FUNNEL_${event.toUpperCase()}`, entityType: "FUNNEL", metadata: { source: source?.slice(0, 120) || null } } });
+}
+
+export async function requestCompanyAction(formData: FormData) {
+  const name = String(formData.get("name") || "").trim();
+  const website = String(formData.get("website") || "").trim();
+  if (name.length < 2 || name.length > 160) errorRedirect("/", "Enter a valid company name.");
+  const user = await getCurrentUser();
+  await prisma.companyRequest.create({ data: { name, website: website || undefined, requesterId: user?.id } });
+  redirect(`/?requested=${encodeURIComponent(name)}`);
+}
+
+function parseStoryForm(formData: FormData) {
+  const primaryReason = String(formData.get("primaryReason") || "");
+  const otherReasons = formData
+    .getAll("otherReasons")
+    .map(String)
+    .filter((reason, index, values) => reason !== primaryReason && values.indexOf(reason) === index);
+
+  return storySchema.safeParse({
+    companyId: String(formData.get("companyId") || ""),
+    roleFamily: String(formData.get("roleFamily") || "").trim(),
+    location: String(formData.get("country") || "").trim() || null,
+    primaryReason,
+    otherReasons,
+    positiveExperience: String(formData.get("positiveExperience") || "").trim(),
+    reasonForLeaving: String(formData.get("reasonForLeaving") || "").trim(),
+    wishIKnew: String(formData.get("wishIKnew") || "").trim(),
+    recommendCompany: String(formData.get("recommendCompany") || ""),
+    workHereAgain: String(formData.get("workHereAgain") || "")
+  });
 }
 
 export async function createStoryAction(
@@ -219,96 +255,9 @@ export async function createStoryAction(
     );
   }
 
-  const primaryReason = String(
-    formData.get("primaryReason") || ""
-  );
+  await enforceActionRateLimit(user.id, "STORY_SUBMITTED", 5, 60 * 60 * 1000);
 
-  const secondary = formData
-    .getAll("otherReasons")
-    .map(String)
-    .filter(
-      (reason, index, array) =>
-        reason !== primaryReason &&
-        array.indexOf(reason) === index
-    )
-    .slice(0, 2);
-
-  const parsed = storySchema.safeParse({
-    companyId: String(
-      formData.get("companyId") || ""
-    ),
-
-    jobTitle: String(
-      formData.get("jobTitle") || ""
-    ).trim(),
-
-    roleFamily: String(
-      formData.get("roleFamily") || ""
-    ).trim(),
-
-    location: String(
-      formData.get("location") || ""
-    ).trim(),
-
-    tenureMonths: Number(
-      formData.get("tenureMonths")
-    ),
-
-    departureType: String(
-      formData.get("departureType") || ""
-    ),
-
-    primaryReason,
-    otherReasons: secondary,
-
-    managementScore: Number(
-      formData.get("managementScore")
-    ),
-
-    compensationScore: Number(
-      formData.get("compensationScore")
-    ),
-
-    workLifeScore: Number(
-      formData.get("workLifeScore")
-    ),
-
-    careerGrowthScore: Number(
-      formData.get("careerGrowthScore")
-    ),
-
-    learningScore: Number(
-      formData.get("learningScore")
-    ),
-
-    cultureScore: Number(
-      formData.get("cultureScore")
-    ),
-
-    jobSecurityScore: Number(
-      formData.get("jobSecurityScore")
-    ),
-
-    positiveExperience: String(
-      formData.get("positiveExperience") || ""
-    ).trim(),
-
-    reasonForLeaving: String(
-      formData.get("reasonForLeaving") || ""
-    ).trim(),
-
-    wishIKnew: String(
-      formData.get("wishIKnew") || ""
-    ).trim(),
-
-    recommendCompany: String(
-      formData.get("recommendCompany") || ""
-    ),
-
-    workHereAgain: String(
-      formData.get("workHereAgain") || ""
-    )
-  });
+  const parsed = parseStoryForm(formData);
 
   if (!parsed.success) {
     errorRedirect(
@@ -354,27 +303,6 @@ export async function createStoryAction(
     parsed.data.wishIKnew
   ]);
 
-  const imageFile = formData.get("experienceImage");
-  let imageUrl: string | undefined;
-
-  if (imageFile instanceof File && imageFile.size > 0) {
-    if (!imageFile.type.startsWith("image/") || imageFile.size > 5 * 1024 * 1024) {
-      errorRedirect("/submit", "Experience images must be images smaller than 5 MB.");
-    }
-
-    const imageName = `${randomBytes(16).toString("hex")}.jpg`;
-    const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
-
-    if (process.env.VERCEL) {
-      imageUrl = `data:${imageFile.type};base64,${imageBuffer.toString("base64")}`;
-    } else {
-      const imageDirectory = path.join(process.cwd(), "public", "uploads", "experience");
-      await mkdir(imageDirectory, { recursive: true });
-      await writeFile(path.join(imageDirectory, imageName), imageBuffer);
-      imageUrl = `/uploads/experience/${imageName}`;
-    }
-  }
-
   const story = await prisma.exitStory.create({
     data: {
       companyId: company.id,
@@ -385,13 +313,12 @@ export async function createStoryAction(
       authorAlias:
         user.publicIdentity.alias,
 
-      jobTitle: parsed.data.jobTitle,
+      jobTitle: null,
       roleFamily: parsed.data.roleFamily,
       location: parsed.data.location,
-      tenureMonths: parsed.data.tenureMonths,
+      tenureMonths: null,
 
-      departureType:
-        parsed.data.departureType,
+      departureType: null,
 
       primaryReason:
         parsed.data.primaryReason,
@@ -399,26 +326,13 @@ export async function createStoryAction(
       otherReasons:
         parsed.data.otherReasons,
 
-      managementScore:
-        parsed.data.managementScore,
-
-      compensationScore:
-        parsed.data.compensationScore,
-
-      workLifeScore:
-        parsed.data.workLifeScore,
-
-      careerGrowthScore:
-        parsed.data.careerGrowthScore,
-
-      learningScore:
-        parsed.data.learningScore,
-
-      cultureScore:
-        parsed.data.cultureScore,
-
-      jobSecurityScore:
-        parsed.data.jobSecurityScore,
+      managementScore: null,
+      compensationScore: null,
+      workLifeScore: null,
+      careerGrowthScore: null,
+      learningScore: null,
+      cultureScore: null,
+      jobSecurityScore: null,
 
       positiveExperience:
         parsed.data.positiveExperience,
@@ -435,8 +349,7 @@ export async function createStoryAction(
       workHereAgain:
         parsed.data.workHereAgain,
 
-      autoFlags,
-      imageUrl
+      autoFlags
     }
   });
 
@@ -452,6 +365,7 @@ export async function createStoryAction(
       }
     }
   });
+  await trackFunnelEventAction("story_submitted");
 
   revalidatePath(
     `/company/${company.slug}`
@@ -462,10 +376,129 @@ export async function createStoryAction(
   );
 }
 
+export async function updateStoryAction(formData: FormData) {
+  const user = await requireUser();
+  const storyId = String(formData.get("storyId") || "");
+  await enforceActionRateLimit(user.id, "STORY_UPDATED", 10, 60 * 60 * 1000);
+  const parsed = parseStoryForm(formData);
+
+  if (!parsed.success) {
+    errorRedirect(`/submit?edit=${encodeURIComponent(storyId)}`, parsed.error.issues[0]?.message || "Invalid story");
+  }
+
+  const existing = await prisma.exitStory.findFirst({
+    where: {
+      id: storyId,
+      publicIdentity: { userId: user.id }
+    },
+    include: { company: true }
+  });
+
+  if (!existing) {
+    errorRedirect("/account", "That experience is no longer available to edit.");
+  }
+
+  const company = await prisma.company.findUnique({ where: { id: parsed.data.companyId } });
+  if (!company) {
+    errorRedirect(`/submit?edit=${encodeURIComponent(storyId)}`, "Company does not exist.");
+  }
+
+  const duplicate = await prisma.exitStory.findFirst({
+    where: {
+      id: { not: existing.id },
+      publicIdentityId: existing.publicIdentityId,
+      companyId: company.id
+    }
+  });
+  if (duplicate) {
+    errorRedirect(`/submit?edit=${encodeURIComponent(storyId)}`, "You already have an experience for this company.");
+  }
+
+  const autoFlags = combinedStoryFlags([
+    parsed.data.positiveExperience,
+    parsed.data.reasonForLeaving,
+    parsed.data.wishIKnew
+  ]);
+
+  await prisma.exitStory.update({
+    where: { id: existing.id },
+    data: {
+      companyId: company.id,
+      jobTitle: null,
+      roleFamily: parsed.data.roleFamily,
+      location: parsed.data.location,
+      tenureMonths: null,
+      departureType: null,
+      primaryReason: parsed.data.primaryReason,
+      otherReasons: parsed.data.otherReasons,
+      managementScore: null,
+      compensationScore: null,
+      workLifeScore: null,
+      careerGrowthScore: null,
+      learningScore: null,
+      cultureScore: null,
+      jobSecurityScore: null,
+      positiveExperience: parsed.data.positiveExperience,
+      reasonForLeaving: parsed.data.reasonForLeaving,
+      wishIKnew: parsed.data.wishIKnew,
+      recommendCompany: parsed.data.recommendCompany,
+      workHereAgain: parsed.data.workHereAgain,
+      autoFlags,
+      status: "PENDING",
+      moderationNote: null,
+      publishedAt: null
+    }
+  });
+
+  await prisma.auditLog.create({
+    data: {
+      actorUserId: user.id,
+      action: "STORY_UPDATED",
+      entityType: "EXIT_STORY",
+      entityId: existing.id,
+      metadata: { companyId: company.id, autoFlags }
+    }
+  });
+
+  revalidatePath(`/company/${existing.company.slug}`);
+  revalidatePath(`/company/${company.slug}`);
+  revalidatePath("/account");
+  redirect("/account?success=Experience+updated+and+sent+back+for+moderation");
+}
+
+export async function deleteStoryAction(formData: FormData) {
+  const user = await requireUser();
+  const storyId = String(formData.get("storyId") || "");
+  const story = await prisma.exitStory.findFirst({
+    where: { id: storyId, publicIdentity: { userId: user.id } },
+    include: { company: true }
+  });
+
+  if (!story) {
+    errorRedirect("/account", "That experience is no longer available to delete.");
+  }
+
+  await prisma.exitStory.delete({ where: { id: story.id } });
+  await prisma.auditLog.create({
+    data: {
+      actorUserId: user.id,
+      action: "STORY_DELETED",
+      entityType: "EXIT_STORY",
+      entityId: story.id,
+      metadata: { companyId: story.companyId }
+    }
+  });
+
+  revalidatePath(`/company/${story.company.slug}`);
+  revalidatePath("/account");
+  redirect("/account?success=Experience+deleted");
+}
+
 export async function requestVerificationAction(
   formData: FormData
 ) {
   const user = await requireUser();
+  await enforceActionRateLimit(user.id, "VERIFICATION_REQUESTED", 5, 24 * 60 * 60 * 1000);
 
   const companyId = String(
     formData.get("companyId") || ""
@@ -559,6 +592,8 @@ export async function requestVerificationAction(
     }
   });
 
+  await prisma.auditLog.create({ data: { actorUserId: user.id, action: "VERIFICATION_REQUESTED", entityType: "EMPLOYMENT_VERIFICATION" } });
+
   redirect(
     "/account?success=Verification+request+submitted"
   );
@@ -568,6 +603,7 @@ export async function reportStoryAction(
   formData: FormData
 ) {
   const user = await requireUser();
+  await enforceActionRateLimit(user.id, "STORY_REPORTED", 15, 24 * 60 * 60 * 1000);
 
   const storyId = String(
     formData.get("storyId") || ""
@@ -621,6 +657,8 @@ export async function reportStoryAction(
     }
   });
 
+  await prisma.auditLog.create({ data: { actorUserId: user.id, action: "STORY_REPORTED", entityType: "CONTENT_REPORT", entityId: storyId } });
+
   redirect(
     `/company/${story.company.slug}?reported=1`
   );
@@ -630,6 +668,7 @@ export async function submitEmployerClaimAction(
   formData: FormData
 ) {
   const user = await requireUser();
+  await enforceActionRateLimit(user.id, "EMPLOYER_CLAIM_REQUESTED", 5, 24 * 60 * 60 * 1000);
 
   const companyId = String(
     formData.get("companyId") || ""
@@ -683,6 +722,8 @@ export async function submitEmployerClaimAction(
     }
   });
 
+  await prisma.auditLog.create({ data: { actorUserId: user.id, action: "EMPLOYER_CLAIM_REQUESTED", entityType: "EMPLOYER_CLAIM" } });
+
   redirect(
     "/employer?success=Company+claim+submitted"
   );
@@ -692,6 +733,7 @@ export async function submitCompanyResponseAction(
   formData: FormData
 ) {
   const user = await requireUser();
+  await enforceActionRateLimit(user.id, "COMPANY_RESPONSE_SUBMITTED", 10, 24 * 60 * 60 * 1000);
 
   const claimId = String(
     formData.get("claimId") || ""
@@ -753,7 +795,7 @@ export async function submitCompanyResponseAction(
     storyId = story.id;
   }
 
-  await prisma.companyResponse.create({
+  const response = await prisma.companyResponse.create({
     data: {
       companyId: claim.companyId,
       claimId: claim.id,
@@ -764,6 +806,8 @@ export async function submitCompanyResponseAction(
       autoFlags: moderationFlags(body)
     }
   });
+
+  await prisma.auditLog.create({ data: { actorUserId: user.id, action: "COMPANY_RESPONSE_SUBMITTED", entityType: "COMPANY_RESPONSE", entityId: response.id } });
 
   redirect(
     "/employer?success=Response+sent+for+moderation"
@@ -827,6 +871,7 @@ export async function moderateStoryAction(
       }
     }
   });
+  if (decision === "APPROVE") await trackFunnelEventAction("story_approved");
 
   revalidatePath("/admin");
   revalidatePath(
@@ -849,6 +894,10 @@ export async function moderateVerificationAction(
     formData.get("note") || ""
   ).trim();
 
+  if (!["APPROVE", "REJECT"].includes(decision)) {
+    throw new Error("Invalid verification decision");
+  }
+
   await prisma.employmentVerification.update({
     where: {
       id
@@ -863,9 +912,12 @@ export async function moderateVerificationAction(
       moderatorNote: note || null,
 
       reviewedById: admin.id,
-      decidedAt: new Date()
+      decidedAt: new Date(),
+      ...(decision === "APPROVE" ? { workEmail: null, evidenceNote: null } : {})
     }
   });
+
+  await prisma.auditLog.create({ data: { actorUserId: admin.id, action: decision === "APPROVE" ? "VERIFICATION_APPROVED" : "VERIFICATION_REJECTED", entityType: "EMPLOYMENT_VERIFICATION", entityId: id } });
 
   revalidatePath("/admin");
 }
@@ -885,6 +937,10 @@ export async function moderateClaimAction(
     formData.get("note") || ""
   ).trim();
 
+  if (!["APPROVE", "REJECT"].includes(decision)) {
+    throw new Error("Invalid claim decision");
+  }
+
   await prisma.employerClaim.update({
     where: {
       id
@@ -902,6 +958,8 @@ export async function moderateClaimAction(
       decidedAt: new Date()
     }
   });
+
+  await prisma.auditLog.create({ data: { actorUserId: admin.id, action: decision === "APPROVE" ? "CLAIM_APPROVED" : "CLAIM_REJECTED", entityType: "EMPLOYER_CLAIM", entityId: id } });
 
   revalidatePath("/admin");
   revalidatePath("/employer");
@@ -921,6 +979,10 @@ export async function moderateResponseAction(
   const note = String(
     formData.get("note") || ""
   ).trim();
+
+  if (!["APPROVE", "REJECT"].includes(decision)) {
+    throw new Error("Invalid response decision");
+  }
 
   const response =
     await prisma.companyResponse.update({
@@ -943,6 +1005,8 @@ export async function moderateResponseAction(
       }
     });
 
+  await prisma.auditLog.create({ data: { actorUserId: admin.id, action: decision === "APPROVE" ? "COMPANY_RESPONSE_APPROVED" : "COMPANY_RESPONSE_REJECTED", entityType: "COMPANY_RESPONSE", entityId: id } });
+
   revalidatePath("/admin");
   revalidatePath(
     `/company/${response.company.slug}`
@@ -952,7 +1016,7 @@ export async function moderateResponseAction(
 export async function resolveReportAction(
   formData: FormData
 ) {
-  await requireAdmin();
+  const admin = await requireAdmin();
 
   const id = String(formData.get("id") || "");
 
@@ -963,6 +1027,10 @@ export async function resolveReportAction(
   const note = String(
     formData.get("note") || ""
   ).trim();
+
+  if (!["DISMISS", "RESOLVE"].includes(decision)) {
+    throw new Error("Invalid report decision");
+  }
 
   await prisma.contentReport.update({
     where: {
@@ -978,6 +1046,8 @@ export async function resolveReportAction(
       resolutionNote: note || null
     }
   });
+
+  await prisma.auditLog.create({ data: { actorUserId: admin.id, action: decision === "DISMISS" ? "REPORT_DISMISSED" : "REPORT_RESOLVED", entityType: "CONTENT_REPORT", entityId: id } });
 
   revalidatePath("/admin");
 }
@@ -1006,7 +1076,6 @@ export async function deleteAccountAction(
       entityId: user.id
     }
   });
-
   await prisma.user.delete({
     where: {
       id: user.id

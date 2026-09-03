@@ -203,6 +203,7 @@ export type UserWhereInput = {
   verifications?: Prisma.EmploymentVerificationListRelationFilter
   employerClaims?: Prisma.EmployerClaimListRelationFilter
   reports?: Prisma.ContentReportListRelationFilter
+  companyRequests?: Prisma.CompanyRequestListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -218,6 +219,7 @@ export type UserOrderByWithRelationInput = {
   verifications?: Prisma.EmploymentVerificationOrderByRelationAggregateInput
   employerClaims?: Prisma.EmployerClaimOrderByRelationAggregateInput
   reports?: Prisma.ContentReportOrderByRelationAggregateInput
+  companyRequests?: Prisma.CompanyRequestOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -236,6 +238,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   verifications?: Prisma.EmploymentVerificationListRelationFilter
   employerClaims?: Prisma.EmployerClaimListRelationFilter
   reports?: Prisma.ContentReportListRelationFilter
+  companyRequests?: Prisma.CompanyRequestListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -277,6 +280,7 @@ export type UserCreateInput = {
   verifications?: Prisma.EmploymentVerificationCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -292,6 +296,7 @@ export type UserUncheckedCreateInput = {
   verifications?: Prisma.EmploymentVerificationUncheckedCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportUncheckedCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUpdateInput = {
@@ -307,6 +312,7 @@ export type UserUpdateInput = {
   verifications?: Prisma.EmploymentVerificationUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -322,6 +328,7 @@ export type UserUncheckedUpdateInput = {
   verifications?: Prisma.EmploymentVerificationUncheckedUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUncheckedUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -482,6 +489,22 @@ export type UserUpdateOneWithoutReportsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReportsInput, Prisma.UserUpdateWithoutReportsInput>, Prisma.UserUncheckedUpdateWithoutReportsInput>
 }
 
+export type UserCreateNestedOneWithoutCompanyRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCompanyRequestsInput, Prisma.UserUncheckedCreateWithoutCompanyRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCompanyRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutCompanyRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCompanyRequestsInput, Prisma.UserUncheckedCreateWithoutCompanyRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCompanyRequestsInput
+  upsert?: Prisma.UserUpsertWithoutCompanyRequestsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCompanyRequestsInput, Prisma.UserUpdateWithoutCompanyRequestsInput>, Prisma.UserUncheckedUpdateWithoutCompanyRequestsInput>
+}
+
 export type UserCreateWithoutPublicIdentityInput = {
   id?: string
   email: string
@@ -494,6 +517,7 @@ export type UserCreateWithoutPublicIdentityInput = {
   verifications?: Prisma.EmploymentVerificationCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutPublicIdentityInput = {
@@ -508,6 +532,7 @@ export type UserUncheckedCreateWithoutPublicIdentityInput = {
   verifications?: Prisma.EmploymentVerificationUncheckedCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportUncheckedCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutPublicIdentityInput = {
@@ -538,6 +563,7 @@ export type UserUpdateWithoutPublicIdentityInput = {
   verifications?: Prisma.EmploymentVerificationUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPublicIdentityInput = {
@@ -552,6 +578,7 @@ export type UserUncheckedUpdateWithoutPublicIdentityInput = {
   verifications?: Prisma.EmploymentVerificationUncheckedUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUncheckedUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -566,6 +593,7 @@ export type UserCreateWithoutSessionsInput = {
   verifications?: Prisma.EmploymentVerificationCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -580,6 +608,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   verifications?: Prisma.EmploymentVerificationUncheckedCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportUncheckedCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -610,6 +639,7 @@ export type UserUpdateWithoutSessionsInput = {
   verifications?: Prisma.EmploymentVerificationUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -624,6 +654,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   verifications?: Prisma.EmploymentVerificationUncheckedUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUncheckedUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutVerificationsInput = {
@@ -638,6 +669,7 @@ export type UserCreateWithoutVerificationsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutVerificationsInput = {
@@ -652,6 +684,7 @@ export type UserUncheckedCreateWithoutVerificationsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportUncheckedCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutVerificationsInput = {
@@ -682,6 +715,7 @@ export type UserUpdateWithoutVerificationsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationsInput = {
@@ -696,6 +730,7 @@ export type UserUncheckedUpdateWithoutVerificationsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUncheckedUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutEmployerClaimsInput = {
@@ -710,6 +745,7 @@ export type UserCreateWithoutEmployerClaimsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   verifications?: Prisma.EmploymentVerificationCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutEmployerClaimsInput = {
@@ -724,6 +760,7 @@ export type UserUncheckedCreateWithoutEmployerClaimsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   verifications?: Prisma.EmploymentVerificationUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ContentReportUncheckedCreateNestedManyWithoutReporterInput
+  companyRequests?: Prisma.CompanyRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutEmployerClaimsInput = {
@@ -754,6 +791,7 @@ export type UserUpdateWithoutEmployerClaimsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   verifications?: Prisma.EmploymentVerificationUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmployerClaimsInput = {
@@ -768,6 +806,7 @@ export type UserUncheckedUpdateWithoutEmployerClaimsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   verifications?: Prisma.EmploymentVerificationUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ContentReportUncheckedUpdateManyWithoutReporterNestedInput
+  companyRequests?: Prisma.CompanyRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutReportsInput = {
@@ -782,6 +821,7 @@ export type UserCreateWithoutReportsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   verifications?: Prisma.EmploymentVerificationCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimCreateNestedManyWithoutUserInput
+  companyRequests?: Prisma.CompanyRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutReportsInput = {
@@ -796,6 +836,7 @@ export type UserUncheckedCreateWithoutReportsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   verifications?: Prisma.EmploymentVerificationUncheckedCreateNestedManyWithoutUserInput
   employerClaims?: Prisma.EmployerClaimUncheckedCreateNestedManyWithoutUserInput
+  companyRequests?: Prisma.CompanyRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutReportsInput = {
@@ -826,6 +867,7 @@ export type UserUpdateWithoutReportsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   verifications?: Prisma.EmploymentVerificationUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUpdateManyWithoutUserNestedInput
+  companyRequests?: Prisma.CompanyRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReportsInput = {
@@ -840,6 +882,83 @@ export type UserUncheckedUpdateWithoutReportsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   verifications?: Prisma.EmploymentVerificationUncheckedUpdateManyWithoutUserNestedInput
   employerClaims?: Prisma.EmployerClaimUncheckedUpdateManyWithoutUserNestedInput
+  companyRequests?: Prisma.CompanyRequestUncheckedUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserCreateWithoutCompanyRequestsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  avatarUrl?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  publicIdentity?: Prisma.PublicIdentityCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  verifications?: Prisma.EmploymentVerificationCreateNestedManyWithoutUserInput
+  employerClaims?: Prisma.EmployerClaimCreateNestedManyWithoutUserInput
+  reports?: Prisma.ContentReportCreateNestedManyWithoutReporterInput
+}
+
+export type UserUncheckedCreateWithoutCompanyRequestsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  avatarUrl?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  publicIdentity?: Prisma.PublicIdentityUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  verifications?: Prisma.EmploymentVerificationUncheckedCreateNestedManyWithoutUserInput
+  employerClaims?: Prisma.EmployerClaimUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ContentReportUncheckedCreateNestedManyWithoutReporterInput
+}
+
+export type UserCreateOrConnectWithoutCompanyRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyRequestsInput, Prisma.UserUncheckedCreateWithoutCompanyRequestsInput>
+}
+
+export type UserUpsertWithoutCompanyRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCompanyRequestsInput, Prisma.UserUncheckedUpdateWithoutCompanyRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyRequestsInput, Prisma.UserUncheckedCreateWithoutCompanyRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCompanyRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCompanyRequestsInput, Prisma.UserUncheckedUpdateWithoutCompanyRequestsInput>
+}
+
+export type UserUpdateWithoutCompanyRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publicIdentity?: Prisma.PublicIdentityUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  verifications?: Prisma.EmploymentVerificationUpdateManyWithoutUserNestedInput
+  employerClaims?: Prisma.EmployerClaimUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ContentReportUpdateManyWithoutReporterNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCompanyRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publicIdentity?: Prisma.PublicIdentityUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  verifications?: Prisma.EmploymentVerificationUncheckedUpdateManyWithoutUserNestedInput
+  employerClaims?: Prisma.EmployerClaimUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ContentReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 
@@ -852,6 +971,7 @@ export type UserCountOutputType = {
   verifications: number
   employerClaims: number
   reports: number
+  companyRequests: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -859,6 +979,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   verifications?: boolean | UserCountOutputTypeCountVerificationsArgs
   employerClaims?: boolean | UserCountOutputTypeCountEmployerClaimsArgs
   reports?: boolean | UserCountOutputTypeCountReportsArgs
+  companyRequests?: boolean | UserCountOutputTypeCountCompanyRequestsArgs
 }
 
 /**
@@ -899,6 +1020,13 @@ export type UserCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.ContentReportWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCompanyRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompanyRequestWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -913,6 +1041,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   verifications?: boolean | Prisma.User$verificationsArgs<ExtArgs>
   employerClaims?: boolean | Prisma.User$employerClaimsArgs<ExtArgs>
   reports?: boolean | Prisma.User$reportsArgs<ExtArgs>
+  companyRequests?: boolean | Prisma.User$companyRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -953,6 +1082,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   verifications?: boolean | Prisma.User$verificationsArgs<ExtArgs>
   employerClaims?: boolean | Prisma.User$employerClaimsArgs<ExtArgs>
   reports?: boolean | Prisma.User$reportsArgs<ExtArgs>
+  companyRequests?: boolean | Prisma.User$companyRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -966,6 +1096,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     verifications: Prisma.$EmploymentVerificationPayload<ExtArgs>[]
     employerClaims: Prisma.$EmployerClaimPayload<ExtArgs>[]
     reports: Prisma.$ContentReportPayload<ExtArgs>[]
+    companyRequests: Prisma.$CompanyRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1374,6 +1505,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   verifications<T extends Prisma.User$verificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmploymentVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employerClaims<T extends Prisma.User$employerClaimsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$employerClaimsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployerClaimPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reports<T extends Prisma.User$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContentReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  companyRequests<T extends Prisma.User$companyRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companyRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1915,6 +2047,30 @@ export type User$reportsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.ContentReportScalarFieldEnum | Prisma.ContentReportScalarFieldEnum[]
+}
+
+/**
+ * User.companyRequests
+ */
+export type User$companyRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CompanyRequest
+   */
+  select?: Prisma.CompanyRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CompanyRequest
+   */
+  omit?: Prisma.CompanyRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyRequestInclude<ExtArgs> | null
+  where?: Prisma.CompanyRequestWhereInput
+  orderBy?: Prisma.CompanyRequestOrderByWithRelationInput | Prisma.CompanyRequestOrderByWithRelationInput[]
+  cursor?: Prisma.CompanyRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CompanyRequestScalarFieldEnum | Prisma.CompanyRequestScalarFieldEnum[]
 }
 
 /**

@@ -52,20 +52,20 @@ export function extractExplicitTranscriptFacts(text: string, companies: CompanyM
   };
 }
 
-/** Prefer LLM details but never drop a fact explicitly spoken in the transcript. */
+/** Prefer explicit transcript facts whenever they are available. */
 export function mergeTranscriptFacts(llm: ExitInterviewExtraction, explicit: ExitInterviewExtraction | null): ExitInterviewExtraction {
   if (!explicit) return llm;
   return {
     ...llm,
-    companyName: llm.companyName ?? explicit.companyName,
-    jobTitle: llm.jobTitle ?? explicit.jobTitle,
-    roleFamily: llm.roleFamily ?? explicit.roleFamily,
-    location: llm.location ?? explicit.location,
-    tenureMonths: llm.tenureMonths ?? explicit.tenureMonths,
-    departureType: llm.departureType ?? explicit.departureType,
-    primaryReason: llm.primaryReason ?? explicit.primaryReason,
-    otherReasons: llm.otherReasons.length ? llm.otherReasons : explicit.otherReasons,
-    positiveExperience: llm.positiveExperience ?? explicit.positiveExperience,
-    reasonForLeaving: llm.reasonForLeaving ?? explicit.reasonForLeaving,
+    companyName: explicit.companyName ?? llm.companyName,
+    jobTitle: explicit.jobTitle ?? llm.jobTitle,
+    roleFamily: explicit.roleFamily ?? llm.roleFamily,
+    location: explicit.location ?? llm.location,
+    tenureMonths: explicit.tenureMonths ?? llm.tenureMonths,
+    departureType: explicit.departureType ?? llm.departureType,
+    primaryReason: explicit.primaryReason ?? llm.primaryReason,
+    otherReasons: explicit.otherReasons.length ? explicit.otherReasons : llm.otherReasons,
+    positiveExperience: explicit.positiveExperience ?? llm.positiveExperience,
+    reasonForLeaving: explicit.reasonForLeaving ?? llm.reasonForLeaving,
   };
 }

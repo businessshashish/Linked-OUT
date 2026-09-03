@@ -17,7 +17,8 @@ export default async function AdminPage() {
     verifications,
     claims,
     responses,
-    reports
+    reports,
+    companyRequests
   ] = await Promise.all([
     prisma.exitStory.findMany({
       where: {
@@ -93,7 +94,8 @@ export default async function AdminPage() {
       orderBy: {
         createdAt: "asc"
       }
-    })
+    }),
+    prisma.companyRequest.findMany({ where: { status: "PENDING" }, orderBy: { createdAt: "asc" } })
   ]);
 
   return (
@@ -144,8 +146,11 @@ export default async function AdminPage() {
           >
             <h3>
               {story.company.name} ·{" "}
-              {story.jobTitle}
+              {story.roleFamily}
             </h3>
+
+            <p className="muted">Public profile: {story.roleFamily}{story.location ? ` · ${story.location}` : ""}</p>
+            <p><strong>Reasons:</strong> {[story.primaryReason, ...story.otherReasons].join(", ")}</p>
 
             {!!story.autoFlags.length && (
               <div className="flagBox">
@@ -446,6 +451,12 @@ export default async function AdminPage() {
             </form>
           </article>
         ))}
+      </section>
+
+      <section className="adminSection">
+        <h2>Requested companies</h2>
+        {!companyRequests.length && <p className="muted">No company requests.</p>}
+        {companyRequests.map((request) => <article className="adminCard" key={request.id}><h3>{request.name}</h3><p>Website: {request.website || "—"}</p><p className="muted">Requested {request.createdAt.toLocaleDateString()}</p></article>)}
       </section>
     </div>
   );

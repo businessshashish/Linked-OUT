@@ -63,6 +63,11 @@ export type CompanyResponse = Prisma.CompanyResponseModel
  */
 export type ContentReport = Prisma.ContentReportModel
 /**
+ * Model CompanyRequest
+ * 
+ */
+export type CompanyRequest = Prisma.CompanyRequestModel
+/**
  * Model AuditLog
  * 
  */
